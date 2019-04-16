@@ -1,0 +1,60 @@
+
+entity Customer {
+	 reference String,
+	 searchKey String,
+	 card String,
+     curDebt Double,
+     debtDate LocalDate,
+	 maxDebt Double,
+     discount Double,
+	 visible Boolean,
+	 photo AnyBlob
+	}
+
+entity Address {
+	addressLine1 String,
+    addressLine2 String,
+    postCode String
+}
+entity Contact {
+	mobileNumber String,
+    telephone String	
+}
+	
+entity Country{
+	code String,
+	name String,
+	phonecode Integer
+}
+
+entity State{
+	name String
+}
+
+entity City{
+	name String
+}
+	
+entity Note {
+	createdDate LocalDate,
+	matter String
+
+}
+
+relationship OneToMany {
+	Customer{address} to Address,
+	Customer{note} to Note,
+	Country{address} to Address,
+	Country{state} to State,
+	State{city} to City
+}
+
+relationship OneToOne {
+	Customer{contact} to Contact
+}
+
+paginate * with pagination
+
+dto * with mapstruct
+
+service all with serviceImpl
