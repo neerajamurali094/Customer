@@ -55,6 +55,9 @@ public class CustomerResourceIntTest {
     private static final String DEFAULT_REFERENCE = "AAAAAAAAAA";
     private static final String UPDATED_REFERENCE = "BBBBBBBBBB";
 
+    private static final String DEFAULT_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_NAME = "BBBBBBBBBB";
+
     private static final String DEFAULT_SEARCH_KEY = "AAAAAAAAAA";
     private static final String UPDATED_SEARCH_KEY = "BBBBBBBBBB";
 
@@ -138,6 +141,7 @@ public class CustomerResourceIntTest {
     public static Customer createEntity(EntityManager em) {
         Customer customer = new Customer()
             .reference(DEFAULT_REFERENCE)
+            .name(DEFAULT_NAME)
             .searchKey(DEFAULT_SEARCH_KEY)
             .card(DEFAULT_CARD)
             .curDebt(DEFAULT_CUR_DEBT)
@@ -172,6 +176,7 @@ public class CustomerResourceIntTest {
         assertThat(customerList).hasSize(databaseSizeBeforeCreate + 1);
         Customer testCustomer = customerList.get(customerList.size() - 1);
         assertThat(testCustomer.getReference()).isEqualTo(DEFAULT_REFERENCE);
+        assertThat(testCustomer.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testCustomer.getSearchKey()).isEqualTo(DEFAULT_SEARCH_KEY);
         assertThat(testCustomer.getCard()).isEqualTo(DEFAULT_CARD);
         assertThat(testCustomer.getCurDebt()).isEqualTo(DEFAULT_CUR_DEBT);
@@ -221,6 +226,7 @@ public class CustomerResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(customer.getId().intValue())))
             .andExpect(jsonPath("$.[*].reference").value(hasItem(DEFAULT_REFERENCE.toString())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].searchKey").value(hasItem(DEFAULT_SEARCH_KEY.toString())))
             .andExpect(jsonPath("$.[*].card").value(hasItem(DEFAULT_CARD.toString())))
             .andExpect(jsonPath("$.[*].curDebt").value(hasItem(DEFAULT_CUR_DEBT.doubleValue())))
@@ -244,6 +250,7 @@ public class CustomerResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(customer.getId().intValue()))
             .andExpect(jsonPath("$.reference").value(DEFAULT_REFERENCE.toString()))
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
             .andExpect(jsonPath("$.searchKey").value(DEFAULT_SEARCH_KEY.toString()))
             .andExpect(jsonPath("$.card").value(DEFAULT_CARD.toString()))
             .andExpect(jsonPath("$.curDebt").value(DEFAULT_CUR_DEBT.doubleValue()))
@@ -277,6 +284,7 @@ public class CustomerResourceIntTest {
         em.detach(updatedCustomer);
         updatedCustomer
             .reference(UPDATED_REFERENCE)
+            .name(UPDATED_NAME)
             .searchKey(UPDATED_SEARCH_KEY)
             .card(UPDATED_CARD)
             .curDebt(UPDATED_CUR_DEBT)
@@ -298,6 +306,7 @@ public class CustomerResourceIntTest {
         assertThat(customerList).hasSize(databaseSizeBeforeUpdate);
         Customer testCustomer = customerList.get(customerList.size() - 1);
         assertThat(testCustomer.getReference()).isEqualTo(UPDATED_REFERENCE);
+        assertThat(testCustomer.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testCustomer.getSearchKey()).isEqualTo(UPDATED_SEARCH_KEY);
         assertThat(testCustomer.getCard()).isEqualTo(UPDATED_CARD);
         assertThat(testCustomer.getCurDebt()).isEqualTo(UPDATED_CUR_DEBT);
@@ -368,6 +377,7 @@ public class CustomerResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(customer.getId().intValue())))
             .andExpect(jsonPath("$.[*].reference").value(hasItem(DEFAULT_REFERENCE)))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].searchKey").value(hasItem(DEFAULT_SEARCH_KEY)))
             .andExpect(jsonPath("$.[*].card").value(hasItem(DEFAULT_CARD)))
             .andExpect(jsonPath("$.[*].curDebt").value(hasItem(DEFAULT_CUR_DEBT.doubleValue())))

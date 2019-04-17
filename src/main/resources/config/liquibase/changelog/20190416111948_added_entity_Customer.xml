@@ -26,6 +26,10 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="name" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
             <column name="search_key" type="varchar(255)">
                 <constraints nullable="true" />
             </column>

@@ -1,7 +1,8 @@
 
 entity Customer {
 	 reference String,
-	 searchKey String,
+name String,	 
+searchKey String,
 	 card String,
      curDebt Double,
      debtDate LocalDate,

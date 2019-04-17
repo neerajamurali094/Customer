@@ -13,6 +13,8 @@ public class CustomerDTO implements Serializable {
 
     private String reference;
 
+    private String name;
+
     private String searchKey;
 
     private String card;
@@ -48,6 +50,14 @@ public class CustomerDTO implements Serializable {
 
     public void setReference(String reference) {
         this.reference = reference;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getSearchKey() {
@@ -156,6 +166,7 @@ public class CustomerDTO implements Serializable {
         return "CustomerDTO{" +
             "id=" + getId() +
             ", reference='" + getReference() + "'" +
+            ", name='" + getName() + "'" +
             ", searchKey='" + getSearchKey() + "'" +
             ", card='" + getCard() + "'" +
             ", curDebt=" + getCurDebt() +

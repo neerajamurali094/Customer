@@ -32,6 +32,9 @@ public class Customer implements Serializable {
     @Column(name = "reference")
     private String reference;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "search_key")
     private String searchKey;
 
@@ -90,6 +93,19 @@ public class Customer implements Serializable {
 
     public void setReference(String reference) {
         this.reference = reference;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Customer name(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getSearchKey() {
@@ -298,6 +314,7 @@ public class Customer implements Serializable {
         return "Customer{" +
             "id=" + getId() +
             ", reference='" + getReference() + "'" +
+            ", name='" + getName() + "'" +
             ", searchKey='" + getSearchKey() + "'" +
             ", card='" + getCard() + "'" +
             ", curDebt=" + getCurDebt() +
