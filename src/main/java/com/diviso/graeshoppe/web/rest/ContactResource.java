@@ -48,7 +48,7 @@ public class ContactResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/contacts")
-    public ResponseEntity<ContactDTO> createContact(@RequestBody ContactDTO contactDTO) throws URISyntaxException {
+    public ResponseEntity<ContactDTO> createContact(ContactDTO contactDTO) throws URISyntaxException {
         log.debug("REST request to save Contact : {}", contactDTO);
         if (contactDTO.getId() != null) {
             throw new BadRequestAlertException("A new contact cannot already have an ID", ENTITY_NAME, "idexists");
