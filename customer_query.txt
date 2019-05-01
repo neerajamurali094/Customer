@@ -1,0 +1,7 @@
+SELECT  customer.customer.name, customer.contact.mobile_number, customer.contact.telephone 
+FROM  customer.contact 
+INNER JOIN  customer.customer  ON customer.contact.id =  customer.customer.contact_id
+
+
+customer
+
