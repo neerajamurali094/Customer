@@ -1,20 +1,34 @@
 package com.diviso.graeshoppe.service.impl;
 
 import com.diviso.graeshoppe.service.CustomerService;
+import com.diviso.graeshoppe.domain.Contact;
 import com.diviso.graeshoppe.domain.Customer;
+import com.diviso.graeshoppe.repository.ContactRepository;
 import com.diviso.graeshoppe.repository.CustomerRepository;
 import com.diviso.graeshoppe.repository.search.CustomerSearchRepository;
+import com.diviso.graeshoppe.service.dto.ContactDTO;
 import com.diviso.graeshoppe.service.dto.CustomerDTO;
+import com.diviso.graeshoppe.service.mapper.ContactMapper;
 import com.diviso.graeshoppe.service.mapper.CustomerMapper;
+import com.twilio.Twilio;
+
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
@@ -32,14 +46,32 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerMapper customerMapper;
 
     private final CustomerSearchRepository customerSearchRepository;
+    
+    private final ContactRepository contactRepository;
 
-    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper customerMapper, CustomerSearchRepository customerSearchRepository) {
-        this.customerRepository = customerRepository;
-        this.customerMapper = customerMapper;
-        this.customerSearchRepository = customerSearchRepository;
-    }
+    private final ContactMapper contactMapper;
+    
+    private JavaMailSender sender;
+    
+    private final static String ACCOUNT_SID = "ACe660cc3e88299624df35f2a6d066c7cc";
+	private final static String AUTH_ID = "32f1e90519be08b568947c78211ff195";
+	private final static String TWILIO_NUMBER="+18166232986";
+	   static {
+	      Twilio.init(ACCOUNT_SID, AUTH_ID);
+	   }
+	 
+	public CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper customerMapper,
+			CustomerSearchRepository customerSearchRepository, ContactRepository contactRepository,
+			ContactMapper contactMapper, JavaMailSender sender) {
+		this.customerRepository = customerRepository;
+		this.customerMapper = customerMapper;
+		this.customerSearchRepository = customerSearchRepository;
+		this.contactRepository = contactRepository;
+		this.contactMapper = contactMapper;
+		this.sender = sender;
+	}
 
-    /**
+	/**
      * Save a customer.
      *
      * @param customerDTO the entity to save
@@ -51,6 +83,19 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerMapper.toEntity(customerDTO);
         customer = customerRepository.save(customer);
         CustomerDTO result = customerMapper.toDto(customer);
+        
+        //logic to send sms
+        if(result.getContactId()!=null){
+        
+        Optional<Contact> contact=contactRepository.findById(result.getContactId());
+        
+        if(contact.get().getMobileNumber()!=null){
+        	String mobileNumber=contact.get().getMobileNumber();
+        	String message=sendSms(mobileNumber);
+        	log.info("***********message{}"+message);
+        }
+        }
+       
         customerSearchRepository.save(customer);
         return result;
     }
@@ -110,4 +155,53 @@ public class CustomerServiceImpl implements CustomerService {
         return customerSearchRepository.search(queryStringQuery(query), pageable)
             .map(customerMapper::toDto);
     }
+    
+	/**
+	 * Send sms notification to registered customer 
+	 *
+	 * @param mobileNumber
+	 *            the mobileNumber to send sms
+	 * @return the sms sending status
+	 */
+	@Override
+	public String sendSms(String mobileNumber) {
+		
+		try {
+			 Message.creator(new PhoneNumber(mobileNumber), new PhoneNumber("+18166232986"),
+					 "Welcome! Thank you for registering with us").create();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "Error while sending sms";
+		}
+		
+		return "SMS Sent Success!";
+	}
+	
+	/**
+	 * Send email notification to registered customer 
+	 *
+	 * @param email
+	 *            the mobileNumber to send email
+	 * @return the email sending status
+	 */
+	@Override
+	public String sendEmail(String email) {
+		
+		MimeMessage message = sender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+		
+		try {
+			helper.setTo(email);
+			helper.setText("Thank you for registering with us!!!");
+			helper.setSubject("Mail From Graeshoppe");
+		} catch (MessagingException e) {
+			e.printStackTrace();
+			return "Error while sending mail ..";
+		}
+		
+		sender.send(message);
+		return "Mail Sent Success!";
+
+	}
 }
