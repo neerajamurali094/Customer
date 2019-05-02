@@ -15,9 +15,16 @@ import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
 
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -25,10 +32,15 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.sql.DataSource;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
@@ -46,32 +58,30 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerMapper customerMapper;
 
     private final CustomerSearchRepository customerSearchRepository;
-    
-    private final ContactRepository contactRepository;
 
-    private final ContactMapper contactMapper;
+	@Autowired
+    private  ContactRepository contactRepository;
     
+	@Autowired
     private JavaMailSender sender;
-    
+	
+	@Autowired
+	DataSource dataSource;
+
     private final static String ACCOUNT_SID = "ACe660cc3e88299624df35f2a6d066c7cc";
 	private final static String AUTH_ID = "32f1e90519be08b568947c78211ff195";
 	private final static String TWILIO_NUMBER="+18166232986";
-	   static {
-	      Twilio.init(ACCOUNT_SID, AUTH_ID);
-	   }
+		 static {
+		      Twilio.init(ACCOUNT_SID, AUTH_ID);
+		   }
+		   
+	    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper customerMapper, CustomerSearchRepository customerSearchRepository) {
+	        this.customerRepository = customerRepository;
+	        this.customerMapper = customerMapper;
+	        this.customerSearchRepository = customerSearchRepository;
+	    }
 	 
-	public CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper customerMapper,
-			CustomerSearchRepository customerSearchRepository, ContactRepository contactRepository,
-			ContactMapper contactMapper, JavaMailSender sender) {
-		this.customerRepository = customerRepository;
-		this.customerMapper = customerMapper;
-		this.customerSearchRepository = customerSearchRepository;
-		this.contactRepository = contactRepository;
-		this.contactMapper = contactMapper;
-		this.sender = sender;
-	}
-
-	/**
+    /**
      * Save a customer.
      *
      * @param customerDTO the entity to save
@@ -203,5 +213,36 @@ public class CustomerServiceImpl implements CustomerService {
 		sender.send(message);
 		return "Mail Sent Success!";
 
+	}
+
+    /**
+     * Get customersReport.
+     *			     
+     * @return the byte[]
+	 * @throws JRException 
+     */
+	@Override
+	public byte[] getPdfAllCustomers() throws JRException {
+		
+		   log.debug("Request to pdf of all customers");
+		
+		   JasperReport jr = JasperCompileManager.compileReport("CustomerDetails.jrxml");
+		
+	       //Preparing parameters
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("customer", jr);
+						
+			Connection conn = null;
+			try {
+				conn = dataSource.getConnection();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			JasperPrint jp = JasperFillManager.fillReport(jr, parameters, conn);
+			
+			//JasperExportManager.exportReportToPdfFile(jp, "UserNeeds.pdf");
+			
+			return JasperExportManager.exportReportToPdf(jp);
 	}
 }
