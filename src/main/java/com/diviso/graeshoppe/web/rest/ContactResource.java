@@ -53,7 +53,12 @@ public class ContactResource {
         if (contactDTO.getId() != null) {
             throw new BadRequestAlertException("A new contact cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        ContactDTO result = contactService.save(contactDTO);
+        ContactDTO result1 = contactService.save(contactDTO);
+	if (result1.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        ContactDTO result = contactService.save(result1);
+
         return ResponseEntity.created(new URI("/api/contacts/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);

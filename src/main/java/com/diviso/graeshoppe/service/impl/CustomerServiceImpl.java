@@ -107,6 +107,8 @@ public class CustomerServiceImpl implements CustomerService {
         }
        
         customerSearchRepository.save(customer);
+        customerSearchRepository.save(customer);
+
         return result;
     }
 
