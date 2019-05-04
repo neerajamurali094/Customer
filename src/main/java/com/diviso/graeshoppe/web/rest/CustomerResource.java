@@ -55,7 +55,7 @@ public class CustomerResource {
             throw new BadRequestAlertException("A new customer cannot already have an ID", ENTITY_NAME, "idexists");
         }
         CustomerDTO result1 = customerService.save(customerDTO);
-        if (customerDTO.getId() == null) {
+        if (result1.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
 
