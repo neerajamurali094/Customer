@@ -1,7 +1,7 @@
 package com.diviso.graeshoppe.web.rest;
 
 import com.diviso.graeshoppe.domain.Customer;
-
+import com.diviso.graeshoppe.repository.CustomerRepository;
 import com.diviso.graeshoppe.service.CustomerService;
 import com.diviso.graeshoppe.web.rest.errors.BadRequestAlertException;
 import com.diviso.graeshoppe.web.rest.util.HeaderUtil;
@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +44,9 @@ public class CustomerResource {
 	@Autowired
 	private CustomerMapper customerMapper;
 
+	@Autowired
+	private CustomerRepository customerRepository;
+
 	public CustomerResource(CustomerService customerService) {
 		this.customerService = customerService;
 	}
@@ -52,20 +54,32 @@ public class CustomerResource {
 	/**
 	 * POST /customers : Create a new customer.
 	 *
-	 * @param customerDTO
-	 *            the customerDTO to create
-	 * @return the ResponseEntity with status 201 (Created) and with body the
-	 *         new customerDTO, or with status 400 (Bad Request) if the customer
-	 *         has already an ID
-	 * @throws URISyntaxException
-	 *             if the Location URI syntax is incorrect
+	 * @param customerDTO the customerDTO to create
+	 * @return the ResponseEntity with status 201 (Created) and with body the new
+	 *         customerDTO, or with status 400 (Bad Request) if the customer has
+	 *         already an ID
+	 * @throws URISyntaxException if the Location URI syntax is incorrect
 	 */
 	@PostMapping("/customers")
 	public ResponseEntity<CustomerDTO> createCustomer(@RequestBody CustomerDTO customerDTO) throws URISyntaxException {
+
 		log.debug("REST request to save Customer : {}", customerDTO);
+
 		if (customerDTO.getId() != null) {
 			throw new BadRequestAlertException("A new customer cannot already have an ID", ENTITY_NAME, "idexists");
 		}
+
+		List<Customer> customers = customerRepository.findAll();
+
+		for (Customer c : customers) {
+
+			if (customerDTO.getName().equals(c.getName())) {
+
+				throw new BadRequestAlertException("Already have a customer with the same name", ENTITY_NAME,
+						"nameexists");
+			}
+		}
+
 		CustomerDTO result1 = customerService.save(customerDTO);
 		if (result1.getId() == null) {
 			throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -80,14 +94,12 @@ public class CustomerResource {
 	/**
 	 * PUT /customers : Updates an existing customer.
 	 *
-	 * @param customerDTO
-	 *            the customerDTO to update
+	 * @param customerDTO the customerDTO to update
 	 * @return the ResponseEntity with status 200 (OK) and with body the updated
-	 *         customerDTO, or with status 400 (Bad Request) if the customerDTO
-	 *         is not valid, or with status 500 (Internal Server Error) if the
+	 *         customerDTO, or with status 400 (Bad Request) if the customerDTO is
+	 *         not valid, or with status 500 (Internal Server Error) if the
 	 *         customerDTO couldn't be updated
-	 * @throws URISyntaxException
-	 *             if the Location URI syntax is incorrect
+	 * @throws URISyntaxException if the Location URI syntax is incorrect
 	 */
 	@PutMapping("/customers")
 	public ResponseEntity<CustomerDTO> updateCustomer(@RequestBody CustomerDTO customerDTO) throws URISyntaxException {
@@ -103,10 +115,9 @@ public class CustomerResource {
 	/**
 	 * GET /customers : get all the customers.
 	 *
-	 * @param pageable
-	 *            the pagination information
-	 * @return the ResponseEntity with status 200 (OK) and the list of customers
-	 *         in body
+	 * @param pageable the pagination information
+	 * @return the ResponseEntity with status 200 (OK) and the list of customers in
+	 *         body
 	 */
 	@GetMapping("/customers")
 	public ResponseEntity<List<CustomerDTO>> getAllCustomers(Pageable pageable) {
@@ -119,8 +130,7 @@ public class CustomerResource {
 	/**
 	 * GET /customers/:id : get the "id" customer.
 	 *
-	 * @param id
-	 *            the id of the customerDTO to retrieve
+	 * @param id the id of the customerDTO to retrieve
 	 * @return the ResponseEntity with status 200 (OK) and with body the
 	 *         customerDTO, or with status 404 (Not Found)
 	 */
@@ -134,8 +144,7 @@ public class CustomerResource {
 	/**
 	 * DELETE /customers/:id : delete the "id" customer.
 	 *
-	 * @param id
-	 *            the id of the customerDTO to delete
+	 * @param id the id of the customerDTO to delete
 	 * @return the ResponseEntity with status 200 (OK)
 	 */
 	@DeleteMapping("/customers/{id}")
@@ -149,10 +158,8 @@ public class CustomerResource {
 	 * SEARCH /_search/customers?query=:query : search for the customer
 	 * corresponding to the query.
 	 *
-	 * @param query
-	 *            the query of the customer search
-	 * @param pageable
-	 *            the pagination information
+	 * @param query    the query of the customer search
+	 * @param pageable the pagination information
 	 * @return the result of the search
 	 */
 	@GetMapping("/_search/customers")
@@ -167,8 +174,8 @@ public class CustomerResource {
 	 * GET /pdf/customerReport : get the pdf of all the products.
 	 * 
 	 * @return the byte[]
-	 * @return the ResponseEntity with status 200 (OK) and the pdf of customers
-	 *         in body
+	 * @return the ResponseEntity with status 200 (OK) and the pdf of customers in
+	 *         body
 	 */
 
 	@GetMapping("/pdf/customerReport")
@@ -195,6 +202,14 @@ public class CustomerResource {
 	public ResponseEntity<CustomerDTO> modelToDto(@RequestBody Customer customer) {
 		log.debug("REST request to convert to DTO");
 		return ResponseEntity.ok().body(customerMapper.toDto(customer));
+	}
+
+	public CustomerRepository getCustomerRepository() {
+		return customerRepository;
+	}
+
+	public void setCustomerRepository(CustomerRepository customerRepository) {
+		this.customerRepository = customerRepository;
 	}
 
 }
