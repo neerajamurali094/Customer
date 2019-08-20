@@ -31,6 +31,9 @@ public class Contact implements Serializable {
     @Column(name = "telephone")
     private String telephone;
 
+    @Column(name = "email")
+    private String email;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -65,6 +68,19 @@ public class Contact implements Serializable {
     public void setTelephone(String telephone) {
         this.telephone = telephone;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public Contact email(String email) {
+        this.email = email;
+        return this;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -93,6 +109,7 @@ public class Contact implements Serializable {
             "id=" + getId() +
             ", mobileNumber='" + getMobileNumber() + "'" +
             ", telephone='" + getTelephone() + "'" +
+            ", email='" + getEmail() + "'" +
             "}";
     }
 }

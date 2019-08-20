@@ -13,6 +13,8 @@ public class ContactDTO implements Serializable {
 
     private String telephone;
 
+    private String email;
+
 
     public Long getId() {
         return id;
@@ -36,6 +38,14 @@ public class ContactDTO implements Serializable {
 
     public void setTelephone(String telephone) {
         this.telephone = telephone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override
@@ -65,6 +75,7 @@ public class ContactDTO implements Serializable {
             "id=" + getId() +
             ", mobileNumber='" + getMobileNumber() + "'" +
             ", telephone='" + getTelephone() + "'" +
+            ", email='" + getEmail() + "'" +
             "}";
     }
 }

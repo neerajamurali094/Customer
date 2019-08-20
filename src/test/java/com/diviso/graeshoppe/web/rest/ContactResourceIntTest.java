@@ -55,6 +55,9 @@ public class ContactResourceIntTest {
     private static final String DEFAULT_TELEPHONE = "AAAAAAAAAA";
     private static final String UPDATED_TELEPHONE = "BBBBBBBBBB";
 
+    private static final String DEFAULT_EMAIL = "AAAAAAAAAA";
+    private static final String UPDATED_EMAIL = "BBBBBBBBBB";
+
     @Autowired
     private ContactRepository contactRepository;
 
@@ -112,7 +115,8 @@ public class ContactResourceIntTest {
     public static Contact createEntity(EntityManager em) {
         Contact contact = new Contact()
             .mobileNumber(DEFAULT_MOBILE_NUMBER)
-            .telephone(DEFAULT_TELEPHONE);
+            .telephone(DEFAULT_TELEPHONE)
+            .email(DEFAULT_EMAIL);
         return contact;
     }
 
@@ -139,6 +143,7 @@ public class ContactResourceIntTest {
         Contact testContact = contactList.get(contactList.size() - 1);
         assertThat(testContact.getMobileNumber()).isEqualTo(DEFAULT_MOBILE_NUMBER);
         assertThat(testContact.getTelephone()).isEqualTo(DEFAULT_TELEPHONE);
+        assertThat(testContact.getEmail()).isEqualTo(DEFAULT_EMAIL);
 
         // Validate the Contact in Elasticsearch
         verify(mockContactSearchRepository, times(1)).save(testContact);
@@ -179,7 +184,8 @@ public class ContactResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(contact.getId().intValue())))
             .andExpect(jsonPath("$.[*].mobileNumber").value(hasItem(DEFAULT_MOBILE_NUMBER.toString())))
-            .andExpect(jsonPath("$.[*].telephone").value(hasItem(DEFAULT_TELEPHONE.toString())));
+            .andExpect(jsonPath("$.[*].telephone").value(hasItem(DEFAULT_TELEPHONE.toString())))
+            .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL.toString())));
     }
     
     @Test
@@ -194,7 +200,8 @@ public class ContactResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(contact.getId().intValue()))
             .andExpect(jsonPath("$.mobileNumber").value(DEFAULT_MOBILE_NUMBER.toString()))
-            .andExpect(jsonPath("$.telephone").value(DEFAULT_TELEPHONE.toString()));
+            .andExpect(jsonPath("$.telephone").value(DEFAULT_TELEPHONE.toString()))
+            .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL.toString()));
     }
 
     @Test
@@ -219,7 +226,8 @@ public class ContactResourceIntTest {
         em.detach(updatedContact);
         updatedContact
             .mobileNumber(UPDATED_MOBILE_NUMBER)
-            .telephone(UPDATED_TELEPHONE);
+            .telephone(UPDATED_TELEPHONE)
+            .email(UPDATED_EMAIL);
         ContactDTO contactDTO = contactMapper.toDto(updatedContact);
 
         restContactMockMvc.perform(put("/api/contacts")
@@ -233,6 +241,7 @@ public class ContactResourceIntTest {
         Contact testContact = contactList.get(contactList.size() - 1);
         assertThat(testContact.getMobileNumber()).isEqualTo(UPDATED_MOBILE_NUMBER);
         assertThat(testContact.getTelephone()).isEqualTo(UPDATED_TELEPHONE);
+        assertThat(testContact.getEmail()).isEqualTo(UPDATED_EMAIL);
 
         // Validate the Contact in Elasticsearch
         verify(mockContactSearchRepository, times(1)).save(testContact);
@@ -294,7 +303,8 @@ public class ContactResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(contact.getId().intValue())))
             .andExpect(jsonPath("$.[*].mobileNumber").value(hasItem(DEFAULT_MOBILE_NUMBER)))
-            .andExpect(jsonPath("$.[*].telephone").value(hasItem(DEFAULT_TELEPHONE)));
+            .andExpect(jsonPath("$.[*].telephone").value(hasItem(DEFAULT_TELEPHONE)))
+            .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)));
     }
 
     @Test

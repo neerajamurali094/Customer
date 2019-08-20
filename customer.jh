@@ -1,8 +1,8 @@
 
 entity Customer {
 	 reference String,
-name String,	 
-searchKey String,
+	name String,	 
+	searchKey String,
 	 card String,
      curDebt Double,
      debtDate LocalDate,
@@ -19,7 +19,8 @@ entity Address {
 }
 entity Contact {
 	mobileNumber String,
-    telephone String	
+    telephone String,
+    email String	
 }
 	
 entity Country{
