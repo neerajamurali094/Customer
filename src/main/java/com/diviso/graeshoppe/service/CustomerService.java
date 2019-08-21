@@ -2,6 +2,8 @@ package com.diviso.graeshoppe.service;
 
 import com.diviso.graeshoppe.service.dto.CustomerDTO;
 
+import net.sf.jasperreports.engine.JRException;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -53,4 +55,26 @@ public interface CustomerService {
      * @return the list of entities
      */
     Page<CustomerDTO> search(String query, Pageable pageable);
+    
+    /**
+     * send sms to the customer
+     *
+     * @param mobileNumber the mobileNumber of the customer
+     */
+    String sendSms(String mobileNumber);
+    
+    /**
+     * send email to the customer
+     *
+     * @param email the email of the customer
+     */
+    public String sendEmail(String email);
+/*
+     * Get customerssReport.
+     *			     
+     * @return the byte[]
+	 * @throws JRException 
+     */    
+    byte[] getPdfAllCustomers() throws JRException;
+
 }
