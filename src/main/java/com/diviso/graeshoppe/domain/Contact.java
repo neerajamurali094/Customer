@@ -28,6 +28,9 @@ public class Contact implements Serializable {
     @Column(name = "mobile_number")
     private String mobileNumber;
 
+    @Column(name = "phone_code")
+    private String phoneCode;
+
     @Column(name = "telephone")
     private String telephone;
 
@@ -54,6 +57,19 @@ public class Contact implements Serializable {
 
     public void setMobileNumber(String mobileNumber) {
         this.mobileNumber = mobileNumber;
+    }
+
+    public String getPhoneCode() {
+        return phoneCode;
+    }
+
+    public Contact phoneCode(String phoneCode) {
+        this.phoneCode = phoneCode;
+        return this;
+    }
+
+    public void setPhoneCode(String phoneCode) {
+        this.phoneCode = phoneCode;
     }
 
     public String getTelephone() {
@@ -108,6 +124,7 @@ public class Contact implements Serializable {
         return "Contact{" +
             "id=" + getId() +
             ", mobileNumber='" + getMobileNumber() + "'" +
+            ", phoneCode='" + getPhoneCode() + "'" +
             ", telephone='" + getTelephone() + "'" +
             ", email='" + getEmail() + "'" +
             "}";

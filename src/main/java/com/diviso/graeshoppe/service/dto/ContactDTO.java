@@ -11,6 +11,8 @@ public class ContactDTO implements Serializable {
 
     private String mobileNumber;
 
+    private String phoneCode;
+
     private String telephone;
 
     private String email;
@@ -30,6 +32,14 @@ public class ContactDTO implements Serializable {
 
     public void setMobileNumber(String mobileNumber) {
         this.mobileNumber = mobileNumber;
+    }
+
+    public String getPhoneCode() {
+        return phoneCode;
+    }
+
+    public void setPhoneCode(String phoneCode) {
+        this.phoneCode = phoneCode;
     }
 
     public String getTelephone() {
@@ -74,6 +84,7 @@ public class ContactDTO implements Serializable {
         return "ContactDTO{" +
             "id=" + getId() +
             ", mobileNumber='" + getMobileNumber() + "'" +
+            ", phoneCode='" + getPhoneCode() + "'" +
             ", telephone='" + getTelephone() + "'" +
             ", email='" + getEmail() + "'" +
             "}";

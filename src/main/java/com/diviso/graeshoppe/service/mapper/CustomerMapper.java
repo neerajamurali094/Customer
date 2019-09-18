@@ -17,6 +17,8 @@ public interface CustomerMapper extends EntityMapper<CustomerDTO, Customer> {
     @Mapping(source = "contactId", target = "contact")
     @Mapping(target = "addresses", ignore = true)
     @Mapping(target = "notes", ignore = true)
+    @Mapping(target = "favouritestores", ignore = true)
+    @Mapping(target = "favouriteproducts", ignore = true)
     Customer toEntity(CustomerDTO customerDTO);
 
     default Customer fromId(Long id) {

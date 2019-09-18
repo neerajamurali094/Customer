@@ -52,6 +52,9 @@ public class ContactResourceIntTest {
     private static final String DEFAULT_MOBILE_NUMBER = "AAAAAAAAAA";
     private static final String UPDATED_MOBILE_NUMBER = "BBBBBBBBBB";
 
+    private static final String DEFAULT_PHONE_CODE = "AAAAAAAAAA";
+    private static final String UPDATED_PHONE_CODE = "BBBBBBBBBB";
+
     private static final String DEFAULT_TELEPHONE = "AAAAAAAAAA";
     private static final String UPDATED_TELEPHONE = "BBBBBBBBBB";
 
@@ -115,6 +118,7 @@ public class ContactResourceIntTest {
     public static Contact createEntity(EntityManager em) {
         Contact contact = new Contact()
             .mobileNumber(DEFAULT_MOBILE_NUMBER)
+            .phoneCode(DEFAULT_PHONE_CODE)
             .telephone(DEFAULT_TELEPHONE)
             .email(DEFAULT_EMAIL);
         return contact;
@@ -142,6 +146,7 @@ public class ContactResourceIntTest {
         assertThat(contactList).hasSize(databaseSizeBeforeCreate + 1);
         Contact testContact = contactList.get(contactList.size() - 1);
         assertThat(testContact.getMobileNumber()).isEqualTo(DEFAULT_MOBILE_NUMBER);
+        assertThat(testContact.getPhoneCode()).isEqualTo(DEFAULT_PHONE_CODE);
         assertThat(testContact.getTelephone()).isEqualTo(DEFAULT_TELEPHONE);
         assertThat(testContact.getEmail()).isEqualTo(DEFAULT_EMAIL);
 
@@ -184,6 +189,7 @@ public class ContactResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(contact.getId().intValue())))
             .andExpect(jsonPath("$.[*].mobileNumber").value(hasItem(DEFAULT_MOBILE_NUMBER.toString())))
+            .andExpect(jsonPath("$.[*].phoneCode").value(hasItem(DEFAULT_PHONE_CODE.toString())))
             .andExpect(jsonPath("$.[*].telephone").value(hasItem(DEFAULT_TELEPHONE.toString())))
             .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL.toString())));
     }
@@ -200,6 +206,7 @@ public class ContactResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(contact.getId().intValue()))
             .andExpect(jsonPath("$.mobileNumber").value(DEFAULT_MOBILE_NUMBER.toString()))
+            .andExpect(jsonPath("$.phoneCode").value(DEFAULT_PHONE_CODE.toString()))
             .andExpect(jsonPath("$.telephone").value(DEFAULT_TELEPHONE.toString()))
             .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL.toString()));
     }
@@ -226,6 +233,7 @@ public class ContactResourceIntTest {
         em.detach(updatedContact);
         updatedContact
             .mobileNumber(UPDATED_MOBILE_NUMBER)
+            .phoneCode(UPDATED_PHONE_CODE)
             .telephone(UPDATED_TELEPHONE)
             .email(UPDATED_EMAIL);
         ContactDTO contactDTO = contactMapper.toDto(updatedContact);
@@ -240,6 +248,7 @@ public class ContactResourceIntTest {
         assertThat(contactList).hasSize(databaseSizeBeforeUpdate);
         Contact testContact = contactList.get(contactList.size() - 1);
         assertThat(testContact.getMobileNumber()).isEqualTo(UPDATED_MOBILE_NUMBER);
+        assertThat(testContact.getPhoneCode()).isEqualTo(UPDATED_PHONE_CODE);
         assertThat(testContact.getTelephone()).isEqualTo(UPDATED_TELEPHONE);
         assertThat(testContact.getEmail()).isEqualTo(UPDATED_EMAIL);
 
@@ -303,6 +312,7 @@ public class ContactResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(contact.getId().intValue())))
             .andExpect(jsonPath("$.[*].mobileNumber").value(hasItem(DEFAULT_MOBILE_NUMBER)))
+            .andExpect(jsonPath("$.[*].phoneCode").value(hasItem(DEFAULT_PHONE_CODE)))
             .andExpect(jsonPath("$.[*].telephone").value(hasItem(DEFAULT_TELEPHONE)))
             .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)));
     }

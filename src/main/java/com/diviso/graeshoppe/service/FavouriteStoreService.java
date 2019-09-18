@@ -1,6 +1,6 @@
 package com.diviso.graeshoppe.service;
 
-import com.diviso.graeshoppe.service.dto.CustomerDTO;
+import com.diviso.graeshoppe.service.dto.FavouriteStoreDTO;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,49 +8,49 @@ import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
 /**
- * Service Interface for managing Customer.
+ * Service Interface for managing FavouriteStore.
  */
-public interface CustomerService {
+public interface FavouriteStoreService {
 
     /**
-     * Save a customer.
+     * Save a favouriteStore.
      *
-     * @param customerDTO the entity to save
+     * @param favouriteStoreDTO the entity to save
      * @return the persisted entity
      */
-    CustomerDTO save(CustomerDTO customerDTO);
+    FavouriteStoreDTO save(FavouriteStoreDTO favouriteStoreDTO);
 
     /**
-     * Get all the customers.
+     * Get all the favouriteStores.
      *
      * @param pageable the pagination information
      * @return the list of entities
      */
-    Page<CustomerDTO> findAll(Pageable pageable);
+    Page<FavouriteStoreDTO> findAll(Pageable pageable);
 
 
     /**
-     * Get the "id" customer.
+     * Get the "id" favouriteStore.
      *
      * @param id the id of the entity
      * @return the entity
      */
-    Optional<CustomerDTO> findOne(Long id);
+    Optional<FavouriteStoreDTO> findOne(Long id);
 
     /**
-     * Delete the "id" customer.
+     * Delete the "id" favouriteStore.
      *
      * @param id the id of the entity
      */
     void delete(Long id);
 
     /**
-     * Search for the customer corresponding to the query.
+     * Search for the favouriteStore corresponding to the query.
      *
      * @param query the query of the search
      * 
      * @param pageable the pagination information
      * @return the list of entities
      */
-    Page<CustomerDTO> search(String query, Pageable pageable);
+    Page<FavouriteStoreDTO> search(String query, Pageable pageable);
 }

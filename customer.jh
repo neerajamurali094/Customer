@@ -17,8 +17,10 @@ entity Address {
     addressLine2 String,
     postCode String
 }
+
 entity Contact {
 	mobileNumber String,
+	phoneCode String,
     telephone String,
     email String	
 }
@@ -43,12 +45,26 @@ entity Note {
 
 }
 
+entity FavouriteProduct {
+
+	productId Long
+
+}
+
+entity FavouriteStore {
+
+	storeId Long
+
+}
+
 relationship OneToMany {
 	Customer{address} to Address,
 	Customer{note} to Note,
 	Country{address} to Address,
 	Country{state} to State,
-	State{city} to City
+	State{city} to City,
+	Customer{favouritestore} to FavouriteStore,
+	Customer{favouriteproduct} to FavouriteProduct
 }
 
 relationship OneToOne {

@@ -73,6 +73,12 @@ public class Customer implements Serializable {
     @OneToMany(mappedBy = "customer")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Note> notes = new HashSet<>();
+    @OneToMany(mappedBy = "customer")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<FavouriteStore> favouritestores = new HashSet<>();
+    @OneToMany(mappedBy = "customer")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<FavouriteProduct> favouriteproducts = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -286,6 +292,56 @@ public class Customer implements Serializable {
 
     public void setNotes(Set<Note> notes) {
         this.notes = notes;
+    }
+
+    public Set<FavouriteStore> getFavouritestores() {
+        return favouritestores;
+    }
+
+    public Customer favouritestores(Set<FavouriteStore> favouriteStores) {
+        this.favouritestores = favouriteStores;
+        return this;
+    }
+
+    public Customer addFavouritestore(FavouriteStore favouriteStore) {
+        this.favouritestores.add(favouriteStore);
+        favouriteStore.setCustomer(this);
+        return this;
+    }
+
+    public Customer removeFavouritestore(FavouriteStore favouriteStore) {
+        this.favouritestores.remove(favouriteStore);
+        favouriteStore.setCustomer(null);
+        return this;
+    }
+
+    public void setFavouritestores(Set<FavouriteStore> favouriteStores) {
+        this.favouritestores = favouriteStores;
+    }
+
+    public Set<FavouriteProduct> getFavouriteproducts() {
+        return favouriteproducts;
+    }
+
+    public Customer favouriteproducts(Set<FavouriteProduct> favouriteProducts) {
+        this.favouriteproducts = favouriteProducts;
+        return this;
+    }
+
+    public Customer addFavouriteproduct(FavouriteProduct favouriteProduct) {
+        this.favouriteproducts.add(favouriteProduct);
+        favouriteProduct.setCustomer(this);
+        return this;
+    }
+
+    public Customer removeFavouriteproduct(FavouriteProduct favouriteProduct) {
+        this.favouriteproducts.remove(favouriteProduct);
+        favouriteProduct.setCustomer(null);
+        return this;
+    }
+
+    public void setFavouriteproducts(Set<FavouriteProduct> favouriteProducts) {
+        this.favouriteproducts = favouriteProducts;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

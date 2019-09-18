@@ -91,8 +91,7 @@ public class ContactServiceImpl implements ContactService {
      */
     @Override
     public void delete(Long id) {
-        log.debug("Request to delete Contact : {}", id);
-        contactRepository.deleteById(id);
+        log.debug("Request to delete Contact : {}", id);        contactRepository.deleteById(id);
         contactSearchRepository.deleteById(id);
     }
 
