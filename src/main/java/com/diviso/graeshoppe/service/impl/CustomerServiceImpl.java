@@ -109,4 +109,20 @@ public class CustomerServiceImpl implements CustomerService {
         return customerSearchRepository.search(queryStringQuery(query), pageable)
             .map(customerMapper::toDto);
     }
+    
+    /**
+     * Search for the customer corresponding to the reference.
+     *
+     * @param reference
+     * @return entity
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Customer findByReference(String reference) {
+        log.debug("Request to search for a Customer {}", reference);
+
+            return customerSearchRepository.findByReference(reference);
+    }
+    
+    
 }

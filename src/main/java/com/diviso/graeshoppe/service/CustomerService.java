@@ -1,5 +1,6 @@
 package com.diviso.graeshoppe.service;
 
+import com.diviso.graeshoppe.domain.Customer;
 import com.diviso.graeshoppe.service.dto.CustomerDTO;
 
 import org.springframework.data.domain.Page;
@@ -53,4 +54,6 @@ public interface CustomerService {
      * @return the list of entities
      */
     Page<CustomerDTO> search(String query, Pageable pageable);
+
+	Customer findByReference(String reference);
 }
