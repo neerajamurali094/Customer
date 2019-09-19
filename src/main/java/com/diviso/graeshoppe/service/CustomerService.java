@@ -55,5 +55,5 @@ public interface CustomerService {
      */
     Page<CustomerDTO> search(String query, Pageable pageable);
 
-	Optional<CustomerDTO> findByReference(String reference);
+	Customer findByReference(String reference);
 }

@@ -118,11 +118,11 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     @Transactional(readOnly = true)
-    public Optional<CustomerDTO> findByReference(String reference) {
+    public Customer findByReference(String reference) {
         log.debug("Request to search for a Customer {}", reference);
 
-            return customerRepository.findByReference(reference).
-            		map(customerMapper::toDto);
+            return customerRepository.findByReference(reference);
+            		
     }
     
     
