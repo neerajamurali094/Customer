@@ -136,4 +136,18 @@ public class CustomerResource {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
+    
+    /**
+     * SEARCH  /_search/customers?query=:query : search for the customer corresponding
+     * to the query.
+     *
+     * @param reference the query of the customer search
+     * @return the result of the search
+     */
+    @GetMapping("/customers/findbyreference/{reference}")
+    public ResponseEntity<CustomerDTO> findbyreference(@RequestParam String reference) {
+    	 log.debug("REST request to get Customer : {}", reference);
+         Optional<CustomerDTO> customerDTO = customerService.findByReference(reference);
+         return ResponseUtil.wrapOrNotFound(customerDTO);
+    }
 }

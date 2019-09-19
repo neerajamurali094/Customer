@@ -11,8 +11,4 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 public interface CustomerSearchRepository extends ElasticsearchRepository<Customer, Long> {
 
 
-	Customer findByReference(String reference);
-
-
-
 }
