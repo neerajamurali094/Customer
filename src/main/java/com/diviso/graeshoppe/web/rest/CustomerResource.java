@@ -1,4 +1,5 @@
 package com.diviso.graeshoppe.web.rest;
+import com.diviso.graeshoppe.domain.Customer;
 import com.diviso.graeshoppe.service.CustomerService;
 import com.diviso.graeshoppe.web.rest.errors.BadRequestAlertException;
 import com.diviso.graeshoppe.web.rest.util.HeaderUtil;
@@ -145,9 +146,8 @@ public class CustomerResource {
      * @return the result of the search
      */
     @GetMapping("/customers/findbyreference/{reference}")
-    public ResponseEntity<CustomerDTO> findbyreference(@RequestParam String reference) {
+    public Customer findbyreference(@RequestParam String reference) {
     	 log.debug("REST request to get Customer : {}", reference);
-         Optional<CustomerDTO> customerDTO = customerService.findByReference(reference);
-         return ResponseUtil.wrapOrNotFound(customerDTO);
+         return customerService.findByReference(reference);
     }
 }
