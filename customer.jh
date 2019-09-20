@@ -19,9 +19,9 @@ entity Address {
 }
 
 entity Contact {
-	mobileNumber String,
-	phoneCode String,
-    telephone String,
+	mobileNumber Long,
+	phoneCode Long,
+    telephone Long,
     email String	
 }
 	

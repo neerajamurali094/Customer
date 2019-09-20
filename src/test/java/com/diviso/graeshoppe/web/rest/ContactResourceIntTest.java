@@ -49,14 +49,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = CustomerApp.class)
 public class ContactResourceIntTest {
 
-    private static final String DEFAULT_MOBILE_NUMBER = "AAAAAAAAAA";
-    private static final String UPDATED_MOBILE_NUMBER = "BBBBBBBBBB";
+    private static final Long DEFAULT_MOBILE_NUMBER = 1L;
+    private static final Long UPDATED_MOBILE_NUMBER = 2L;
 
-    private static final String DEFAULT_PHONE_CODE = "AAAAAAAAAA";
-    private static final String UPDATED_PHONE_CODE = "BBBBBBBBBB";
+    private static final Long DEFAULT_PHONE_CODE = 1L;
+    private static final Long UPDATED_PHONE_CODE = 2L;
 
-    private static final String DEFAULT_TELEPHONE = "AAAAAAAAAA";
-    private static final String UPDATED_TELEPHONE = "BBBBBBBBBB";
+    private static final Long DEFAULT_TELEPHONE = 1L;
+    private static final Long UPDATED_TELEPHONE = 2L;
 
     private static final String DEFAULT_EMAIL = "AAAAAAAAAA";
     private static final String UPDATED_EMAIL = "BBBBBBBBBB";
@@ -188,9 +188,9 @@ public class ContactResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(contact.getId().intValue())))
-            .andExpect(jsonPath("$.[*].mobileNumber").value(hasItem(DEFAULT_MOBILE_NUMBER.toString())))
-            .andExpect(jsonPath("$.[*].phoneCode").value(hasItem(DEFAULT_PHONE_CODE.toString())))
-            .andExpect(jsonPath("$.[*].telephone").value(hasItem(DEFAULT_TELEPHONE.toString())))
+            .andExpect(jsonPath("$.[*].mobileNumber").value(hasItem(DEFAULT_MOBILE_NUMBER.intValue())))
+            .andExpect(jsonPath("$.[*].phoneCode").value(hasItem(DEFAULT_PHONE_CODE.intValue())))
+            .andExpect(jsonPath("$.[*].telephone").value(hasItem(DEFAULT_TELEPHONE.intValue())))
             .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL.toString())));
     }
     
@@ -205,9 +205,9 @@ public class ContactResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(contact.getId().intValue()))
-            .andExpect(jsonPath("$.mobileNumber").value(DEFAULT_MOBILE_NUMBER.toString()))
-            .andExpect(jsonPath("$.phoneCode").value(DEFAULT_PHONE_CODE.toString()))
-            .andExpect(jsonPath("$.telephone").value(DEFAULT_TELEPHONE.toString()))
+            .andExpect(jsonPath("$.mobileNumber").value(DEFAULT_MOBILE_NUMBER.intValue()))
+            .andExpect(jsonPath("$.phoneCode").value(DEFAULT_PHONE_CODE.intValue()))
+            .andExpect(jsonPath("$.telephone").value(DEFAULT_TELEPHONE.intValue()))
             .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL.toString()));
     }
 
@@ -311,9 +311,9 @@ public class ContactResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(contact.getId().intValue())))
-            .andExpect(jsonPath("$.[*].mobileNumber").value(hasItem(DEFAULT_MOBILE_NUMBER)))
-            .andExpect(jsonPath("$.[*].phoneCode").value(hasItem(DEFAULT_PHONE_CODE)))
-            .andExpect(jsonPath("$.[*].telephone").value(hasItem(DEFAULT_TELEPHONE)))
+            .andExpect(jsonPath("$.[*].mobileNumber").value(hasItem(DEFAULT_MOBILE_NUMBER.intValue())))
+            .andExpect(jsonPath("$.[*].phoneCode").value(hasItem(DEFAULT_PHONE_CODE.intValue())))
+            .andExpect(jsonPath("$.[*].telephone").value(hasItem(DEFAULT_TELEPHONE.intValue())))
             .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)));
     }
 

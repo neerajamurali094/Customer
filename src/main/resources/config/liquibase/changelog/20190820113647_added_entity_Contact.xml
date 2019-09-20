@@ -22,15 +22,15 @@
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="mobile_number" type="varchar(255)">
+            <column name="mobile_number" type="bigint">
                 <constraints nullable="true" />
             </column>
 
-            <column name="phone_code" type="varchar(255)">
+            <column name="phone_code" type="bigint">
                 <constraints nullable="true" />
             </column>
 
-            <column name="telephone" type="varchar(255)">
+            <column name="telephone" type="bigint">
                 <constraints nullable="true" />
             </column>
 

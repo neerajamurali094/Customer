@@ -9,11 +9,11 @@ public class ContactDTO implements Serializable {
 
     private Long id;
 
-    private String mobileNumber;
+    private Long mobileNumber;
 
-    private String phoneCode;
+    private Long phoneCode;
 
-    private String telephone;
+    private Long telephone;
 
     private String email;
 
@@ -26,27 +26,27 @@ public class ContactDTO implements Serializable {
         this.id = id;
     }
 
-    public String getMobileNumber() {
+    public Long getMobileNumber() {
         return mobileNumber;
     }
 
-    public void setMobileNumber(String mobileNumber) {
+    public void setMobileNumber(Long mobileNumber) {
         this.mobileNumber = mobileNumber;
     }
 
-    public String getPhoneCode() {
+    public Long getPhoneCode() {
         return phoneCode;
     }
 
-    public void setPhoneCode(String phoneCode) {
+    public void setPhoneCode(Long phoneCode) {
         this.phoneCode = phoneCode;
     }
 
-    public String getTelephone() {
+    public Long getTelephone() {
         return telephone;
     }
 
-    public void setTelephone(String telephone) {
+    public void setTelephone(Long telephone) {
         this.telephone = telephone;
     }
 
@@ -83,9 +83,9 @@ public class ContactDTO implements Serializable {
     public String toString() {
         return "ContactDTO{" +
             "id=" + getId() +
-            ", mobileNumber='" + getMobileNumber() + "'" +
-            ", phoneCode='" + getPhoneCode() + "'" +
-            ", telephone='" + getTelephone() + "'" +
+            ", mobileNumber=" + getMobileNumber() +
+            ", phoneCode=" + getPhoneCode() +
+            ", telephone=" + getTelephone() +
             ", email='" + getEmail() + "'" +
             "}";
     }

@@ -26,13 +26,13 @@ public class Contact implements Serializable {
     private Long id;
 
     @Column(name = "mobile_number")
-    private String mobileNumber;
+    private Long mobileNumber;
 
     @Column(name = "phone_code")
-    private String phoneCode;
+    private Long phoneCode;
 
     @Column(name = "telephone")
-    private String telephone;
+    private Long telephone;
 
     @Column(name = "email")
     private String email;
@@ -46,42 +46,42 @@ public class Contact implements Serializable {
         this.id = id;
     }
 
-    public String getMobileNumber() {
+    public Long getMobileNumber() {
         return mobileNumber;
     }
 
-    public Contact mobileNumber(String mobileNumber) {
+    public Contact mobileNumber(Long mobileNumber) {
         this.mobileNumber = mobileNumber;
         return this;
     }
 
-    public void setMobileNumber(String mobileNumber) {
+    public void setMobileNumber(Long mobileNumber) {
         this.mobileNumber = mobileNumber;
     }
 
-    public String getPhoneCode() {
+    public Long getPhoneCode() {
         return phoneCode;
     }
 
-    public Contact phoneCode(String phoneCode) {
+    public Contact phoneCode(Long phoneCode) {
         this.phoneCode = phoneCode;
         return this;
     }
 
-    public void setPhoneCode(String phoneCode) {
+    public void setPhoneCode(Long phoneCode) {
         this.phoneCode = phoneCode;
     }
 
-    public String getTelephone() {
+    public Long getTelephone() {
         return telephone;
     }
 
-    public Contact telephone(String telephone) {
+    public Contact telephone(Long telephone) {
         this.telephone = telephone;
         return this;
     }
 
-    public void setTelephone(String telephone) {
+    public void setTelephone(Long telephone) {
         this.telephone = telephone;
     }
 
@@ -123,9 +123,9 @@ public class Contact implements Serializable {
     public String toString() {
         return "Contact{" +
             "id=" + getId() +
-            ", mobileNumber='" + getMobileNumber() + "'" +
-            ", phoneCode='" + getPhoneCode() + "'" +
-            ", telephone='" + getTelephone() + "'" +
+            ", mobileNumber=" + getMobileNumber() +
+            ", phoneCode=" + getPhoneCode() +
+            ", telephone=" + getTelephone() +
             ", email='" + getEmail() + "'" +
             "}";
     }
