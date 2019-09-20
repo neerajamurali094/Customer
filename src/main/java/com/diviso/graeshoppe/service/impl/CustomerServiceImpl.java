@@ -1,14 +1,16 @@
 package com.diviso.graeshoppe.service.impl;
 
 import com.diviso.graeshoppe.service.CustomerService;
+import com.diviso.graeshoppe.service.UniqueCustomerIDService;
 import com.diviso.graeshoppe.domain.Customer;
 import com.diviso.graeshoppe.repository.CustomerRepository;
 import com.diviso.graeshoppe.repository.search.CustomerSearchRepository;
 import com.diviso.graeshoppe.service.dto.CustomerDTO;
+import com.diviso.graeshoppe.service.dto.UniqueCustomerIDDTO;
 import com.diviso.graeshoppe.service.mapper.CustomerMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
 
+	@Autowired
+	private UniqueCustomerIDService uniqueCustomerIdService;
+	
     private final CustomerMapper customerMapper;
 
     private final CustomerSearchRepository customerSearchRepository;
@@ -47,7 +52,9 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public CustomerDTO save(CustomerDTO customerDTO) {
-        log.debug("Request to save Customer : {}", customerDTO);
+		UniqueCustomerIDDTO uniqueCustomerIdDTO = uniqueCustomerIdService.save(new UniqueCustomerIDDTO());
+		customerDTO.setId(uniqueCustomerIdDTO.getId());
+    	log.debug("Request to save Customer : {}", customerDTO);
         Customer customer = customerMapper.toEntity(customerDTO);
         customer = customerRepository.save(customer);
         CustomerDTO result = customerMapper.toDto(customer);
@@ -109,21 +116,4 @@ public class CustomerServiceImpl implements CustomerService {
         return customerSearchRepository.search(queryStringQuery(query), pageable)
             .map(customerMapper::toDto);
     }
-    
-    /**
-     * Search for the customer corresponding to the reference.
-     *
-     * @param reference
-     * @return entity
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Customer findByReference(String reference) {
-        log.debug("Request to search for a Customer {}", reference);
-
-            return customerRepository.findByReference(reference);
-            		
-    }
-    
-    
 }

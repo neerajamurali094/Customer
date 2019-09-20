@@ -91,8 +91,7 @@ public class CityServiceImpl implements CityService {
      */
     @Override
     public void delete(Long id) {
-        log.debug("Request to delete City : {}", id);
-        cityRepository.deleteById(id);
+        log.debug("Request to delete City : {}", id);        cityRepository.deleteById(id);
         citySearchRepository.deleteById(id);
     }
 

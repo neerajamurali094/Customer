@@ -57,6 +57,9 @@ entity FavouriteStore {
 
 }
 
+entity UniqueCustomerID{
+}
+
 relationship OneToMany {
 	Customer{address} to Address,
 	Customer{note} to Note,

@@ -1,22 +1,22 @@
 package com.diviso.graeshoppe.service.impl;
 
-import com.diviso.graeshoppe.service.ContactService;
-import com.diviso.graeshoppe.domain.Contact;
-import com.diviso.graeshoppe.repository.ContactRepository;
-import com.diviso.graeshoppe.repository.search.ContactSearchRepository;
-import com.diviso.graeshoppe.service.dto.ContactDTO;
-import com.diviso.graeshoppe.service.mapper.ContactMapper;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import com.diviso.graeshoppe.domain.Contact;
+import com.diviso.graeshoppe.repository.ContactRepository;
+import com.diviso.graeshoppe.repository.search.ContactSearchRepository;
+import com.diviso.graeshoppe.service.ContactService;
+import com.diviso.graeshoppe.service.dto.ContactDTO;
+import com.diviso.graeshoppe.service.mapper.ContactMapper;
 
 /**
  * Service Implementation for managing Contact.
@@ -30,6 +30,9 @@ public class ContactServiceImpl implements ContactService {
     private final ContactRepository contactRepository;
 
     private final ContactMapper contactMapper;
+    
+
+
 
     private final ContactSearchRepository contactSearchRepository;
 
@@ -47,7 +50,7 @@ public class ContactServiceImpl implements ContactService {
      */
     @Override
     public ContactDTO save(ContactDTO contactDTO) {
-        log.debug("Request to save Contact : {}", contactDTO);
+    	log.debug("Request to save Contact : {}", contactDTO);
         Contact contact = contactMapper.toEntity(contactDTO);
         contact = contactRepository.save(contact);
         ContactDTO result = contactMapper.toDto(contact);

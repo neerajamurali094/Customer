@@ -1,6 +1,6 @@
 package com.diviso.graeshoppe.service;
 
-import com.diviso.graeshoppe.service.dto.CustomerDTO;
+import com.diviso.graeshoppe.service.dto.UniqueCustomerIDDTO;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,49 +8,49 @@ import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
 /**
- * Service Interface for managing Customer.
+ * Service Interface for managing UniqueCustomerID.
  */
-public interface CustomerService {
+public interface UniqueCustomerIDService {
 
     /**
-     * Save a customer.
+     * Save a uniqueCustomerID.
      *
-     * @param customerDTO the entity to save
+     * @param uniqueCustomerIDDTO the entity to save
      * @return the persisted entity
      */
-    CustomerDTO save(CustomerDTO customerDTO);
+    UniqueCustomerIDDTO save(UniqueCustomerIDDTO uniqueCustomerIDDTO);
 
     /**
-     * Get all the customers.
+     * Get all the uniqueCustomerIDS.
      *
      * @param pageable the pagination information
      * @return the list of entities
      */
-    Page<CustomerDTO> findAll(Pageable pageable);
+    Page<UniqueCustomerIDDTO> findAll(Pageable pageable);
 
 
     /**
-     * Get the "id" customer.
+     * Get the "id" uniqueCustomerID.
      *
      * @param id the id of the entity
      * @return the entity
      */
-    Optional<CustomerDTO> findOne(Long id);
+    Optional<UniqueCustomerIDDTO> findOne(Long id);
 
     /**
-     * Delete the "id" customer.
+     * Delete the "id" uniqueCustomerID.
      *
      * @param id the id of the entity
      */
     void delete(Long id);
 
     /**
-     * Search for the customer corresponding to the query.
+     * Search for the uniqueCustomerID corresponding to the query.
      *
      * @param query the query of the search
      * 
      * @param pageable the pagination information
      * @return the list of entities
      */
-    Page<CustomerDTO> search(String query, Pageable pageable);
+    Page<UniqueCustomerIDDTO> search(String query, Pageable pageable);
 }
