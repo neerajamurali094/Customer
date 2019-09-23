@@ -198,6 +198,11 @@ jhipster:
         contact-email:
         license:
         license-url:
+        
+
+sms:
+   url: https://api.textlocal.in
+   apikey: LaOs/+NbOtU-qsVX1aJkKJ0SXK4khv3bInFkyvMWdG
 
 # ===================================================================
 # Application specific properties

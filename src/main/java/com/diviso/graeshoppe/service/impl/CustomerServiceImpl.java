@@ -1,36 +1,6 @@
 package com.diviso.graeshoppe.service.impl;
 
-import com.diviso.graeshoppe.service.CustomerService;
-import com.diviso.graeshoppe.domain.Contact;
-import com.diviso.graeshoppe.domain.Customer;
-import com.diviso.graeshoppe.repository.ContactRepository;
-import com.diviso.graeshoppe.repository.CustomerRepository;
-import com.diviso.graeshoppe.repository.search.CustomerSearchRepository;
-import com.diviso.graeshoppe.service.dto.ContactDTO;
-import com.diviso.graeshoppe.service.dto.CustomerDTO;
-import com.diviso.graeshoppe.service.mapper.ContactMapper;
-import com.diviso.graeshoppe.service.mapper.CustomerMapper;
-import com.twilio.Twilio;
-
-import com.twilio.rest.api.v2010.account.Message;
-import com.twilio.type.PhoneNumber;
-
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -42,7 +12,37 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.sql.DataSource;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.diviso.graeshoppe.client.SMS.SMSResourceApi;
+import com.diviso.graeshoppe.client.model.OTPChallenge;
+import com.diviso.graeshoppe.client.model.OTPResponse;
+import com.diviso.graeshoppe.domain.Customer;
+import com.diviso.graeshoppe.repository.ContactRepository;
+import com.diviso.graeshoppe.repository.CustomerRepository;
+import com.diviso.graeshoppe.repository.search.CustomerSearchRepository;
+import com.diviso.graeshoppe.service.CustomerService;
+import com.diviso.graeshoppe.service.dto.CustomerDTO;
+import com.diviso.graeshoppe.service.mapper.CustomerMapper;
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
+
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
 
 /**
  * Service Implementation for managing Customer.
@@ -61,6 +61,12 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
     private  ContactRepository contactRepository;
+	
+	@Autowired
+	private SMSResourceApi smsResourceApi;
+	
+	@Value("${sms.apikey}")
+	String apikey;
     
 	@Autowired
     private JavaMailSender sender;
@@ -234,5 +240,16 @@ public class CustomerServiceImpl implements CustomerService {
 			//JasperExportManager.exportReportToPdfFile(jp, "UserNeeds.pdf");
 			
 			return JasperExportManager.exportReportToPdf(jp);
+	}
+
+	@Override
+	public OTPResponse sendSMS(String message, String apiKey, long numbers, String sender) {
+		
+		return smsResourceApi.sendSMS(message, apiKey, numbers, sender);
+	}
+
+	@Override
+	public OTPChallenge verifyOTP(long numbers, String code, String apiKey) {
+		return smsResourceApi.verifyOTP(numbers, code, apiKey);
 	}
 }

@@ -1,5 +1,7 @@
 package com.diviso.graeshoppe.web.rest;
 
+import com.diviso.graeshoppe.client.model.OTPChallenge;
+import com.diviso.graeshoppe.client.model.OTPResponse;
 import com.diviso.graeshoppe.domain.Customer;
 import com.diviso.graeshoppe.repository.CustomerRepository;
 import com.diviso.graeshoppe.service.CustomerService;
@@ -203,6 +205,24 @@ public class CustomerResource {
 		log.debug("REST request to convert to DTO");
 		return ResponseEntity.ok().body(customerMapper.toDto(customer));
 	}
+	
+	@PostMapping("/customer/sendSMS")
+	public ResponseEntity<CustomerDTO> sendSMS(@RequestBody Customer customer) {
+		log.debug("REST request to convert to DTO");
+		return ResponseEntity.ok().body(customerMapper.toDto(customer));
+	}
+	
+	@PostMapping("/customer/otp_send")
+	OTPResponse sendSMS(@RequestParam String message, @RequestParam String apiKey, @RequestParam long  numbers, @RequestParam String sender) {
+    			
+		return customerService.sendSMS(message, apiKey, numbers, sender);
+	}
+	
+    @PostMapping(value = "/otp_challenge")
+	OTPChallenge verifyOTP(@RequestParam long numbers, @RequestParam String code, @RequestParam String apiKey) {
+  			
+		return customerService.verifyOTP(numbers,code,apiKey);
+	}
 
 	public CustomerRepository getCustomerRepository() {
 		return customerRepository;
@@ -212,4 +232,6 @@ public class CustomerResource {
 		this.customerRepository = customerRepository;
 	}
 
+	
+	
 }

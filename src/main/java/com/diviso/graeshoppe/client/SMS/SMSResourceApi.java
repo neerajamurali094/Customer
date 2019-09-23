@@ -5,11 +5,20 @@
  */
 package com.diviso.graeshoppe.client.SMS;
 
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.diviso.graeshoppe.client.model.OTPChallenge;
+import com.diviso.graeshoppe.client.model.OTPResponse;
+
+import io.swagger.annotations.Api;
 
 public interface SMSResourceApi {
 
-
-    String createAddressUsingPOST();
-
+    @PostMapping(value = "/otp_send")
+	OTPResponse sendSMS(@RequestParam(value="message") String message, @RequestParam(value="apiKey") String apiKey, @RequestParam(value="numbers") long  numbers, @RequestParam(value="sender") String sender);
+    
+    @PostMapping(value = "/otp_challenge")
+	OTPChallenge verifyOTP(@RequestParam(value="numbers") long numbers, @RequestParam(value="code") String code, @RequestParam(value="apiKey") String apiKey);
 
 }

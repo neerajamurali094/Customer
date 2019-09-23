@@ -1,11 +1,15 @@
 package com.diviso.graeshoppe.service;
 
+import com.diviso.graeshoppe.client.model.OTPChallenge;
+import com.diviso.graeshoppe.client.model.OTPResponse;
 import com.diviso.graeshoppe.service.dto.CustomerDTO;
 
 import net.sf.jasperreports.engine.JRException;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Optional;
 
@@ -76,5 +80,11 @@ public interface CustomerService {
 	 * @throws JRException 
      */    
     byte[] getPdfAllCustomers() throws JRException;
+    
+
+	OTPResponse sendSMS(@RequestParam String message, @RequestParam String apiKey, @RequestParam long  numbers, @RequestParam String sender);
+
+	OTPChallenge verifyOTP(long numbers, String code, String apiKey);
+    
 
 }
