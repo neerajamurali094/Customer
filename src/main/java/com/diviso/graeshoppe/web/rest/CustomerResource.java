@@ -218,7 +218,7 @@ public class CustomerResource {
 		return customerService.sendSMS(message, apiKey, numbers, sender);
 	}
 	
-    @PostMapping(value = "/otp_challenge")
+    @PostMapping("/customer/otp_challenge")
 	OTPChallenge verifyOTP(@RequestParam long numbers, @RequestParam String code, @RequestParam String apiKey) {
   			
 		return customerService.verifyOTP(numbers,code,apiKey);
