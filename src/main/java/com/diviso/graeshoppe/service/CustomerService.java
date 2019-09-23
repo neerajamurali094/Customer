@@ -82,7 +82,7 @@ public interface CustomerService {
     byte[] getPdfAllCustomers() throws JRException;
     
 
-	OTPResponse sendSMS(@RequestParam String message, @RequestParam String apiKey, @RequestParam long  numbers, @RequestParam String sender);
+	OTPResponse sendSMS(String message, String apiKey, long  numbers, String sender);
 
 	OTPChallenge verifyOTP(long numbers, String code, String apiKey);
     
