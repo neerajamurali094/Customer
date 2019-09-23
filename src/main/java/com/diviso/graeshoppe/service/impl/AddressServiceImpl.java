@@ -91,7 +91,8 @@ public class AddressServiceImpl implements AddressService {
      */
     @Override
     public void delete(Long id) {
-        log.debug("Request to delete Address : {}", id);        addressRepository.deleteById(id);
+        log.debug("Request to delete Address : {}", id);
+        addressRepository.deleteById(id);
         addressSearchRepository.deleteById(id);
     }
 

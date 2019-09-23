@@ -1,22 +1,46 @@
 package com.diviso.graeshoppe.service.impl;
 
 import com.diviso.graeshoppe.service.CustomerService;
-import com.diviso.graeshoppe.service.UniqueCustomerIDService;
+import com.diviso.graeshoppe.domain.Contact;
 import com.diviso.graeshoppe.domain.Customer;
+import com.diviso.graeshoppe.repository.ContactRepository;
 import com.diviso.graeshoppe.repository.CustomerRepository;
 import com.diviso.graeshoppe.repository.search.CustomerSearchRepository;
+import com.diviso.graeshoppe.service.dto.ContactDTO;
 import com.diviso.graeshoppe.service.dto.CustomerDTO;
-import com.diviso.graeshoppe.service.dto.UniqueCustomerIDDTO;
+import com.diviso.graeshoppe.service.mapper.ContactMapper;
 import com.diviso.graeshoppe.service.mapper.CustomerMapper;
+import com.twilio.Twilio;
+
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
+
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.sql.DataSource;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
@@ -31,19 +55,32 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
 
-	@Autowired
-	private UniqueCustomerIDService uniqueCustomerIdService;
-	
     private final CustomerMapper customerMapper;
 
     private final CustomerSearchRepository customerSearchRepository;
 
-    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper customerMapper, CustomerSearchRepository customerSearchRepository) {
-        this.customerRepository = customerRepository;
-        this.customerMapper = customerMapper;
-        this.customerSearchRepository = customerSearchRepository;
-    }
+	@Autowired
+    private  ContactRepository contactRepository;
+    
+	@Autowired
+    private JavaMailSender sender;
+	
+	@Autowired
+	DataSource dataSource;
 
+    private final static String ACCOUNT_SID = "ACe660cc3e88299624df35f2a6d066c7cc";
+	private final static String AUTH_ID = "32f1e90519be08b568947c78211ff195";
+	private final static String TWILIO_NUMBER="+18166232986";
+		 static {
+		      Twilio.init(ACCOUNT_SID, AUTH_ID);
+		   }
+		   
+	    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper customerMapper, CustomerSearchRepository customerSearchRepository) {
+	        this.customerRepository = customerRepository;
+	        this.customerMapper = customerMapper;
+	        this.customerSearchRepository = customerSearchRepository;
+	    }
+	 
     /**
      * Save a customer.
      *
@@ -52,13 +89,14 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public CustomerDTO save(CustomerDTO customerDTO) {
-		UniqueCustomerIDDTO uniqueCustomerIdDTO = uniqueCustomerIdService.save(new UniqueCustomerIDDTO());
-		customerDTO.setId(uniqueCustomerIdDTO.getId());
-    	log.debug("Request to save Customer : {}", customerDTO);
+        log.debug("Request to save Customer : {}", customerDTO);
         Customer customer = customerMapper.toEntity(customerDTO);
         customer = customerRepository.save(customer);
         CustomerDTO result = customerMapper.toDto(customer);
+        
         customerSearchRepository.save(customer);
+        customerSearchRepository.save(customer);
+
         return result;
     }
 
@@ -98,7 +136,8 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public void delete(Long id) {
-        log.debug("Request to delete Customer : {}", id);        customerRepository.deleteById(id);
+        log.debug("Request to delete Customer : {}", id);
+        customerRepository.deleteById(id);
         customerSearchRepository.deleteById(id);
     }
 
@@ -116,4 +155,84 @@ public class CustomerServiceImpl implements CustomerService {
         return customerSearchRepository.search(queryStringQuery(query), pageable)
             .map(customerMapper::toDto);
     }
+    
+	/**
+	 * Send sms notification to registered customer 
+	 *
+	 * @param mobileNumber
+	 *            the mobileNumber to send sms
+	 * @return the sms sending status
+	 */
+	@Override
+	public String sendSms(String mobileNumber) {
+		
+		try {
+			 Message.creator(new PhoneNumber(mobileNumber), new PhoneNumber("+18166232986"),
+					 "Welcome! Thank you for registering with us").create();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "Error while sending sms";
+		}
+		
+		return "SMS Sent Success!";
+	}
+	
+	/**
+	 * Send email notification to registered customer 
+	 *
+	 * @param email
+	 *            the mobileNumber to send email
+	 * @return the email sending status
+	 */
+	@Override
+	public String sendEmail(String email) {
+		
+		MimeMessage message = sender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+		
+		try {
+			helper.setTo(email);
+			helper.setText("Thank you for registering with us!!!");
+			helper.setSubject("Mail From Graeshoppe");
+		} catch (MessagingException e) {
+			e.printStackTrace();
+			return "Error while sending mail ..";
+		}
+		
+		sender.send(message);
+		return "Mail Sent Success!";
+
+	}
+
+    /**
+     * Get customersReport.
+     *			     
+     * @return the byte[]
+	 * @throws JRException 
+     */
+	@Override
+	public byte[] getPdfAllCustomers() throws JRException {
+		
+		   log.debug("Request to pdf of all customers");
+		
+		   JasperReport jr = JasperCompileManager.compileReport("CustomerDetails.jrxml");
+		
+	       //Preparing parameters
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("customer", jr);
+						
+			Connection conn = null;
+			try {
+				conn = dataSource.getConnection();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			JasperPrint jp = JasperFillManager.fillReport(jr, parameters, conn);
+			
+			//JasperExportManager.exportReportToPdfFile(jp, "UserNeeds.pdf");
+			
+			return JasperExportManager.exportReportToPdf(jp);
+	}
 }

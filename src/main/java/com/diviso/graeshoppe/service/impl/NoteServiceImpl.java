@@ -91,7 +91,8 @@ public class NoteServiceImpl implements NoteService {
      */
     @Override
     public void delete(Long id) {
-        log.debug("Request to delete Note : {}", id);        noteRepository.deleteById(id);
+        log.debug("Request to delete Note : {}", id);
+        noteRepository.deleteById(id);
         noteSearchRepository.deleteById(id);
     }
 

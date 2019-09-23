@@ -91,7 +91,8 @@ public class CountryServiceImpl implements CountryService {
      */
     @Override
     public void delete(Long id) {
-        log.debug("Request to delete Country : {}", id);        countryRepository.deleteById(id);
+        log.debug("Request to delete Country : {}", id);
+        countryRepository.deleteById(id);
         countrySearchRepository.deleteById(id);
     }
 
