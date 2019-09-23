@@ -1,4 +1,6 @@
 package com.diviso.graeshoppe.web.rest;
+import com.diviso.graeshoppe.domain.Customer;
+import com.diviso.graeshoppe.repository.CustomerRepository;
 import com.diviso.graeshoppe.service.CustomerService;
 import com.diviso.graeshoppe.web.rest.errors.BadRequestAlertException;
 import com.diviso.graeshoppe.web.rest.util.HeaderUtil;
@@ -7,6 +9,7 @@ import com.diviso.graeshoppe.service.dto.CustomerDTO;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -35,6 +38,9 @@ public class CustomerResource {
     private static final String ENTITY_NAME = "customerCustomer";
 
     private final CustomerService customerService;
+    
+	@Autowired
+	private CustomerRepository customerRepository;
 
     public CustomerResource(CustomerService customerService) {
         this.customerService = customerService;
@@ -47,17 +53,37 @@ public class CustomerResource {
      * @return the ResponseEntity with status 201 (Created) and with body the new customerDTO, or with status 400 (Bad Request) if the customer has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PostMapping("/customers")
-    public ResponseEntity<CustomerDTO> createCustomer(@RequestBody CustomerDTO customerDTO) throws URISyntaxException {
-        log.debug("REST request to save Customer : {}", customerDTO);
-        if (customerDTO.getId() != null) {
-            throw new BadRequestAlertException("A new customer cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-        CustomerDTO result = customerService.save(customerDTO);
-        return ResponseEntity.created(new URI("/api/customers/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-            .body(result);
-    }
+	@PostMapping("/customers")
+	public ResponseEntity<CustomerDTO> createCustomer(@RequestBody CustomerDTO customerDTO) throws URISyntaxException {
+
+		log.debug("REST request to save Customer : {}", customerDTO);
+
+		if (customerDTO.getId() != null) {
+			throw new BadRequestAlertException("A new customer cannot already have an ID", ENTITY_NAME, "idexists");
+		}
+
+		List<Customer> customers = customerRepository.findAll();
+
+		for (Customer c : customers) {
+
+			if (customerDTO.getName().equals(c.getName())) {
+
+				throw new BadRequestAlertException("Already have a customer with the same name", ENTITY_NAME,
+						"nameexists");
+			}
+		}
+
+		CustomerDTO result1 = customerService.save(customerDTO);
+		if (result1.getId() == null) {
+			throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+		}
+
+		CustomerDTO result = customerService.save(result1);
+
+		return ResponseEntity.created(new URI("/api/customers/" + result.getId()))
+				.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
+	}
+
 
     /**
      * PUT  /customers : Updates an existing customer.
