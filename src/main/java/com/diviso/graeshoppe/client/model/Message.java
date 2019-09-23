@@ -2,15 +2,15 @@ package com.diviso.graeshoppe.client.model;
 
 public class Message {
 	
-	private long numParts;
+	private long num_parts;
 	private String sender;
 	private String content;
 	
 	public long getNumParts() {
-		return numParts;
+		return num_parts;
 	}
-	public void setNumParts(long numParts) {
-		this.numParts = numParts;
+	public void setNumParts(long num_parts) {
+		this.num_parts = num_parts;
 	}
 	public String getSender() {
 		return sender;

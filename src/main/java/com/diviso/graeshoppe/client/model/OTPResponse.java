@@ -8,11 +8,11 @@ public class OTPResponse {
 	private long balance;
 	private long batch_id;
 	private long cost;
-	private long numMessages;
+	private long num_messages;
 	
 	private Message message;
 	
-    private Set<MessageRecipient> messageRecipient= new HashSet<>();
+    private Set<MessageRecipient> messages= new HashSet<>();
 
 	private String receipt_url;
 	private String custom;
@@ -35,24 +35,13 @@ public class OTPResponse {
 	public void setCost(long cost) {
 		this.cost = cost;
 	}
-	public long getNumMessages() {
-		return numMessages;
-	}
-	public void setNumMessages(long numMessages) {
-		this.numMessages = numMessages;
-	}
 	public Message getMessage() {
 		return message;
 	}
 	public void setMessage(Message message) {
 		this.message = message;
 	}
-	public Set<MessageRecipient> getMessageRecipient() {
-		return messageRecipient;
-	}
-	public void setMessageRecipient(Set<MessageRecipient> messageRecipient) {
-		this.messageRecipient = messageRecipient;
-	}
+
 	public String getReceipt_url() {
 		return receipt_url;
 	}
@@ -70,6 +59,18 @@ public class OTPResponse {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public long getNum_messages() {
+		return num_messages;
+	}
+	public void setNum_messages(long num_messages) {
+		this.num_messages = num_messages;
+	}
+	public Set<MessageRecipient> getMessages() {
+		return messages;
+	}
+	public void setMessages(Set<MessageRecipient> messages) {
+		this.messages = messages;
 	}
 	
 
