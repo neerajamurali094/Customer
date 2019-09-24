@@ -1,4 +1,4 @@
-package com.diviso.graeshoppe.client.model;
+package com.diviso.graeshoppe.domain;
 
 public class OTPChallenge {
 

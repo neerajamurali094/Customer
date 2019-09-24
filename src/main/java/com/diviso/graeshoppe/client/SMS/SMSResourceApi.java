@@ -8,10 +8,9 @@ package com.diviso.graeshoppe.client.SMS;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.diviso.graeshoppe.client.model.OTPChallenge;
-import com.diviso.graeshoppe.client.model.OTPResponse;
+import com.diviso.graeshoppe.domain.OTPChallenge;
+import com.diviso.graeshoppe.domain.OTPResponse;
 
-import io.swagger.annotations.Api;
 
 public interface SMSResourceApi {
 

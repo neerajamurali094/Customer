@@ -1,8 +1,8 @@
 package com.diviso.graeshoppe.web.rest;
 
-import com.diviso.graeshoppe.client.model.OTPChallenge;
-import com.diviso.graeshoppe.client.model.OTPResponse;
 import com.diviso.graeshoppe.domain.Customer;
+import com.diviso.graeshoppe.domain.OTPChallenge;
+import com.diviso.graeshoppe.domain.OTPResponse;
 import com.diviso.graeshoppe.repository.CustomerRepository;
 import com.diviso.graeshoppe.service.CustomerService;
 import com.diviso.graeshoppe.web.rest.errors.BadRequestAlertException;
