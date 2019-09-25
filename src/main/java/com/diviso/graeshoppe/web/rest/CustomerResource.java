@@ -17,6 +17,7 @@ import net.sf.jasperreports.engine.JRException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -42,6 +43,8 @@ public class CustomerResource {
 	private static final String ENTITY_NAME = "customerCustomer";
 
 	private final CustomerService customerService;
+	
+	
 
 	@Autowired
 	private CustomerMapper customerMapper;
@@ -213,21 +216,26 @@ public class CustomerResource {
 	}
 	
 	@PostMapping("/customer/otp_send")
-	OTPResponse sendSMS(@RequestParam String message, @RequestParam String apiKey, @RequestParam long  numbers, @RequestParam String sender) {
+	OTPResponse sendSMS( @RequestParam long numbers) {
     			
-		return customerService.sendSMS(message, apiKey, numbers, sender);
+		return customerService.sendSMS( numbers);
 	}
 	
     @PostMapping("/customer/otp_challenge")
-	OTPChallenge verifyOTP(@RequestParam long numbers, @RequestParam String code, @RequestParam String apiKey) {
+	OTPChallenge verifyOTP(@RequestParam long numbers, @RequestParam String code) {
   			
-		return customerService.verifyOTP(numbers,code,apiKey);
+		return customerService.verifyOTP(numbers,code);
 	}
 
 	public CustomerRepository getCustomerRepository() {
 		return customerRepository;
 	}
 
+	@GetMapping("/findByReference")
+	public Customer findByReference(@PathVariable String reference) {
+		return customerService.findByReference(reference);
+	}
+	
 	public void setCustomerRepository(CustomerRepository customerRepository) {
 		this.customerRepository = customerRepository;
 	}
