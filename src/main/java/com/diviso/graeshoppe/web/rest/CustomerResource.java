@@ -231,7 +231,7 @@ public class CustomerResource {
 		return customerRepository;
 	}
 
-	@GetMapping("/findByReference")
+	@GetMapping("/findByReference/{reference}")
 	public Customer findByReference(@PathVariable String reference) {
 		return customerService.findByReference(reference);
 	}
