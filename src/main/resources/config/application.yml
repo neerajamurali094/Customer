@@ -203,7 +203,7 @@ jhipster:
 
 smsgateway:
    url: https://api.textlocal.in
-   sender: Foodexp
+   sender: TXTLCL
    credentials:
       apiKey: LaOs/+NbOtU-qsVX1aJkKJ0SXK4khv3bInFkyvMWdG
 # ===================================================================
