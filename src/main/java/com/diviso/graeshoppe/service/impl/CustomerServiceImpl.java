@@ -260,4 +260,10 @@ public class CustomerServiceImpl implements CustomerService {
 	public Customer findByReference(String reference) {
 			return customerRepository.findByReference(reference);
 	}
+
+	@Override
+	public Optional<Object> findByMobileNumber(Long mobileNumber) {
+
+		return customerRepository.findByContact_MobileNumber(mobileNumber).map(customerMapper::toDto);
+	}
 }

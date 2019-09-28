@@ -89,6 +89,8 @@ public interface CustomerService {
 	OTPChallenge verifyOTP(long numbers, String code);
 
 	Customer findByReference(String reference);
+
+	Optional<Object> findByMobileNumber(Long mobileNumber);
     
 
 }

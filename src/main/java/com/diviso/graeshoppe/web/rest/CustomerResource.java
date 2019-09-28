@@ -52,10 +52,19 @@ public class CustomerResource {
 	@Autowired
 	private CustomerRepository customerRepository;
 
+	
+	
+	
 	public CustomerResource(CustomerService customerService) {
 		this.customerService = customerService;
 	}
 
+	@GetMapping("/findByMobileNumber/{mobileNumber}")
+	public ResponseEntity<Object> findByMobileNumber(@PathVariable Long mobileNumber) {
+		Optional<Object> customerDTO=customerService.findByMobileNumber(mobileNumber);
+		return ResponseUtil.wrapOrNotFound(customerDTO);
+	}
+	
 	/**
 	 * POST /customers : Create a new customer.
 	 *
