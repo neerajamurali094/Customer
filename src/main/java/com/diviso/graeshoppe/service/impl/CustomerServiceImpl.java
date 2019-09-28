@@ -262,7 +262,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public Optional<Object> findByMobileNumber(Long mobileNumber) {
+	public Optional<CustomerDTO> findByMobileNumber(Long mobileNumber) {
 
 		return customerRepository.findByContact_MobileNumber(mobileNumber).map(customerMapper::toDto);
 	}

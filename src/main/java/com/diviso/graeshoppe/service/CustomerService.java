@@ -90,7 +90,7 @@ public interface CustomerService {
 
 	Customer findByReference(String reference);
 
-	Optional<Object> findByMobileNumber(Long mobileNumber);
+	Optional<CustomerDTO> findByMobileNumber(Long mobileNumber);
     
 
 }

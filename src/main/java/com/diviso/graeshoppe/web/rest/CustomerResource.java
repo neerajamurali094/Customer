@@ -60,8 +60,8 @@ public class CustomerResource {
 	}
 
 	@GetMapping("/findByMobileNumber/{mobileNumber}")
-	public ResponseEntity<Object> findByMobileNumber(@PathVariable Long mobileNumber) {
-		Optional<Object> customerDTO=customerService.findByMobileNumber(mobileNumber);
+	public ResponseEntity<CustomerDTO> findByMobileNumber(@PathVariable Long mobileNumber) {
+		Optional<CustomerDTO> customerDTO=customerService.findByMobileNumber(mobileNumber);
 		return ResponseUtil.wrapOrNotFound(customerDTO);
 	}
 	
