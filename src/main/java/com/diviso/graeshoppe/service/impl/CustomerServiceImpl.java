@@ -60,14 +60,17 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerSearchRepository customerSearchRepository;
 
+    @Value("${smsgateway.credentials.apiKey}")
+	private String apiKey;
+    
+    @Value("${smsgateway.sender}")
+	private String SMSsender;
+    
 	@Autowired
     private  ContactRepository contactRepository;
 	
 	@Autowired
 	private SMSResourceApi smsResourceApi;
-	
-	@Value("${sms.apikey}")
-	String apikey;
     
 	@Autowired
     private JavaMailSender sender;
@@ -233,7 +236,6 @@ public class CustomerServiceImpl implements CustomerService {
 			try {
 				conn = dataSource.getConnection();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			JasperPrint jp = JasperFillManager.fillReport(jr, parameters, conn);
@@ -244,13 +246,24 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public OTPResponse sendSMS(String message, String apiKey, long numbers, String sender) {
-		
-		return smsResourceApi.sendSMS(message, apiKey, numbers, sender);
+	public OTPResponse sendSMS(long numbers) {
+		String message="Dear User, Enter your OTP to complete registration. OTP to verify your Mobile is ";
+		return smsResourceApi.sendSMS(message, apiKey, numbers, SMSsender);
 	}
 
 	@Override
-	public OTPChallenge verifyOTP(long numbers, String code, String apiKey) {
+	public OTPChallenge verifyOTP(long numbers, String code) {
 		return smsResourceApi.verifyOTP(numbers, code, apiKey);
+	}
+	
+	@Override
+	public Customer findByReference(String reference) {
+			return customerRepository.findByReference(reference);
+	}
+
+	@Override
+	public Optional<CustomerDTO> findByMobileNumber(Long mobileNumber) {
+
+		return customerRepository.findByContact_MobileNumber(mobileNumber).map(customerMapper::toDto);
 	}
 }

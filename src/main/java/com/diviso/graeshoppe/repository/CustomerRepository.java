@@ -1,6 +1,9 @@
 package com.diviso.graeshoppe.repository;
 
 import com.diviso.graeshoppe.domain.Customer;
+
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -12,4 +15,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
+	Customer findByReference(String reference);
+	
+	Optional<Customer> findByContact_MobileNumber(Long mobileNumber);
 }

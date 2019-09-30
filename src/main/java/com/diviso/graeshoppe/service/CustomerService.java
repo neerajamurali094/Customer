@@ -1,6 +1,7 @@
 package com.diviso.graeshoppe.service;
 
 
+import com.diviso.graeshoppe.domain.Customer;
 import com.diviso.graeshoppe.domain.OTPChallenge;
 import com.diviso.graeshoppe.domain.OTPResponse;
 import com.diviso.graeshoppe.service.dto.CustomerDTO;
@@ -83,9 +84,13 @@ public interface CustomerService {
     byte[] getPdfAllCustomers() throws JRException;
     
 
-	OTPResponse sendSMS(String message, String apiKey, long  numbers, String sender);
+	OTPResponse sendSMS(long  numbers);
 
-	OTPChallenge verifyOTP(long numbers, String code, String apiKey);
+	OTPChallenge verifyOTP(long numbers, String code);
+
+	Customer findByReference(String reference);
+
+	Optional<CustomerDTO> findByMobileNumber(Long mobileNumber);
     
 
 }
