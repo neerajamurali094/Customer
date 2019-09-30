@@ -57,7 +57,7 @@ public class FavouriteStoreResource {
         if (result1.getId() == null) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idnull");
         }
-        FavouriteStoreDTO result = favouriteStoreService.save(favouriteStoreDTO);
+        FavouriteStoreDTO result = favouriteStoreService.save(result1);
         return ResponseEntity.created(new URI("/api/favourite-stores/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
