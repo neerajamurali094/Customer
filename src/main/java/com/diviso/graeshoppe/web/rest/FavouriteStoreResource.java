@@ -53,6 +53,10 @@ public class FavouriteStoreResource {
         if (favouriteStoreDTO.getId() != null) {
             throw new BadRequestAlertException("A new favouriteStore cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        FavouriteStoreDTO result1 = favouriteStoreService.save(favouriteStoreDTO);
+        if (result1.getId() == null) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idnull");
+        }
         FavouriteStoreDTO result = favouriteStoreService.save(favouriteStoreDTO);
         return ResponseEntity.created(new URI("/api/favourite-stores/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
