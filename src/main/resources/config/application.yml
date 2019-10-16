@@ -202,7 +202,7 @@ jhipster:
 
 
 smsgateway:
-   url: https://api.textlocal.in
+   url: https://api.textlocal.com
    sender: TXTLCL
    credentials:
       apiKey: LaOs/+NbOtU-qsVX1aJkKJ0SXK4khv3bInFkyvMWdG
