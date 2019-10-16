@@ -202,10 +202,10 @@ jhipster:
 
 
 smsgateway:
-   url: https://api.textlocal.com
-   sender: TXTLCL
+   url: https://api.txtlocal.com
+   sender: FoodExp
    credentials:
-      apiKey: LaOs/+NbOtU-qsVX1aJkKJ0SXK4khv3bInFkyvMWdG
+      apiKey: X8TXzZ3n8Yc-oPcDvBC0CWo8vNvAZoJKzW5KZrqVsF	
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class
