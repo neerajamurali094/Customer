@@ -60,10 +60,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerSearchRepository customerSearchRepository;
 
-    @Value("${smsgateway.credentials.apiKey}")
+    @Value("${smsgateway.credentials.in-apiKey}")
 	private String apiKey;
     
-    @Value("${smsgateway.sender}")
+    @Value("${smsgateway.in-sender}")
 	private String SMSsender;
     
 	@Autowired
