@@ -12,7 +12,7 @@ import com.diviso.graeshoppe.domain.OTPChallenge;
 import com.diviso.graeshoppe.domain.OTPResponse;
 
 
-public interface SMSResourceApi {
+public interface SMSResourceApiIN {
 
     @PostMapping(value = "/otp_send")
 	OTPResponse sendSMS(@RequestParam(value="message") String message, @RequestParam(value="apiKey") String apiKey, @RequestParam(value="numbers") long  numbers, @RequestParam(value="sender") String sender);

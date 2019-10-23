@@ -84,9 +84,9 @@ public interface CustomerService {
     byte[] getPdfAllCustomers() throws JRException;
     
 
-	OTPResponse sendSMS(long  numbers);
+	OTPResponse sendSMS(Long  numbers);
 
-	OTPChallenge verifyOTP(long numbers, String code);
+	OTPChallenge verifyOTP(Long numbers, String code);
 
 	Customer findByReference(String reference);
 

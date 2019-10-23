@@ -204,12 +204,12 @@ jhipster:
 smsgateway:
    uk-url: https://api.txtlocal.com
    uk-sender: FoodExp
-   credentials:
-      uk-apiKey: X8TXzZ3n8Yc-oPcDvBC0CWo8vNvAZoJKzW5KZrqVsF
    in-url: https://api.textlocal.in
    in-sender: TXTLCL
    credentials:
-      in-apiKey: LaOs/+NbOtU-qsVX1aJkKJ0SXK4khv3bInFkyvMWdG		
+      uk-apiKey: X8TXzZ3n8Yc-oPcDvBC0CWo8vNvAZoJKzW5KZrqVsF
+      in-apiKey: LaOs/+NbOtU-qsVX1aJkKJ0SXK4khv3bInFkyvMWdG
+
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class

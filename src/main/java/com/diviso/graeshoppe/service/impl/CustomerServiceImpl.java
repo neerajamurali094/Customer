@@ -23,7 +23,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.diviso.graeshoppe.client.SMS.SMSResourceApi;
+import com.diviso.graeshoppe.client.SMS.SMSResourceApiIN;
+import com.diviso.graeshoppe.client.SMS.SMSResourceApiUK;
 
 import com.diviso.graeshoppe.domain.Customer;
 import com.diviso.graeshoppe.domain.OTPChallenge;
@@ -52,155 +53,158 @@ import net.sf.jasperreports.engine.JasperReport;
 @Transactional
 public class CustomerServiceImpl implements CustomerService {
 
-    private final Logger log = LoggerFactory.getLogger(CustomerServiceImpl.class);
+	private final Logger log = LoggerFactory.getLogger(CustomerServiceImpl.class);
 
-    private final CustomerRepository customerRepository;
+	private final CustomerRepository customerRepository;
 
-    private final CustomerMapper customerMapper;
+	private final CustomerMapper customerMapper;
 
-    private final CustomerSearchRepository customerSearchRepository;
+	private final CustomerSearchRepository customerSearchRepository;
 
-    @Value("${smsgateway.credentials.in-apiKey}")
-	private String apiKey;
-    
-    @Value("${smsgateway.in-sender}")
-	private String SMSsender;
-    
+	@Value("${smsgateway.credentials.in-apiKey}")
+	private String apiKey_IN;
+
+	@Value("${smsgateway.in-sender}")
+	private String SMSsender_IN;
+
+	@Value("${smsgateway.credentials.uk-apiKey}")
+	private String apiKey_UK;
+
+	@Value("${smsgateway.uk-sender}")
+	private String SMSsender_UK;
+
 	@Autowired
-    private  ContactRepository contactRepository;
-	
+	private ContactRepository contactRepository;
+
 	@Autowired
-	private SMSResourceApi smsResourceApi;
-    
+	private SMSResourceApiUK smsResourceApiUK;
 	@Autowired
-    private JavaMailSender sender;
-	
+	private SMSResourceApiIN smsResourceApiIN;
+
+	@Autowired
+	private JavaMailSender sender;
+
 	@Autowired
 	DataSource dataSource;
 
-    private final static String ACCOUNT_SID = "ACe660cc3e88299624df35f2a6d066c7cc";
+	private final static String ACCOUNT_SID = "ACe660cc3e88299624df35f2a6d066c7cc";
 	private final static String AUTH_ID = "32f1e90519be08b568947c78211ff195";
-	private final static String TWILIO_NUMBER="+18166232986";
-		 static {
-		      Twilio.init(ACCOUNT_SID, AUTH_ID);
-		   }
-		   
-	    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper customerMapper, CustomerSearchRepository customerSearchRepository) {
-	        this.customerRepository = customerRepository;
-	        this.customerMapper = customerMapper;
-	        this.customerSearchRepository = customerSearchRepository;
-	    }
-	 
-    /**
-     * Save a customer.
-     *
-     * @param customerDTO the entity to save
-     * @return the persisted entity
-     */
-    @Override
-    public CustomerDTO save(CustomerDTO customerDTO) {
-        log.debug("Request to save Customer : {}", customerDTO);
-        Customer customer = customerMapper.toEntity(customerDTO);
-        customer = customerRepository.save(customer);
-        CustomerDTO result = customerMapper.toDto(customer);
-        
-        customerSearchRepository.save(customer);
-        customerSearchRepository.save(customer);
+	private final static String TWILIO_NUMBER = "+18166232986";
+	static {
+		Twilio.init(ACCOUNT_SID, AUTH_ID);
+	}
 
-        return result;
-    }
+	public CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper customerMapper,
+			CustomerSearchRepository customerSearchRepository) {
+		this.customerRepository = customerRepository;
+		this.customerMapper = customerMapper;
+		this.customerSearchRepository = customerSearchRepository;
+	}
 
-    /**
-     * Get all the customers.
-     *
-     * @param pageable the pagination information
-     * @return the list of entities
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Page<CustomerDTO> findAll(Pageable pageable) {
-        log.debug("Request to get all Customers");
-        return customerRepository.findAll(pageable)
-            .map(customerMapper::toDto);
-    }
-
-
-    /**
-     * Get one customer by id.
-     *
-     * @param id the id of the entity
-     * @return the entity
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<CustomerDTO> findOne(Long id) {
-        log.debug("Request to get Customer : {}", id);
-        return customerRepository.findById(id)
-            .map(customerMapper::toDto);
-    }
-
-    /**
-     * Delete the customer by id.
-     *
-     * @param id the id of the entity
-     */
-    @Override
-    public void delete(Long id) {
-        log.debug("Request to delete Customer : {}", id);
-        customerRepository.deleteById(id);
-        customerSearchRepository.deleteById(id);
-    }
-
-    /**
-     * Search for the customer corresponding to the query.
-     *
-     * @param query the query of the search
-     * @param pageable the pagination information
-     * @return the list of entities
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Page<CustomerDTO> search(String query, Pageable pageable) {
-        log.debug("Request to search for a page of Customers for query {}", query);
-        return customerSearchRepository.search(queryStringQuery(query), pageable)
-            .map(customerMapper::toDto);
-    }
-    
 	/**
-	 * Send sms notification to registered customer 
+	 * Save a customer.
 	 *
-	 * @param mobileNumber
-	 *            the mobileNumber to send sms
+	 * @param customerDTO the entity to save
+	 * @return the persisted entity
+	 */
+	@Override
+	public CustomerDTO save(CustomerDTO customerDTO) {
+		log.debug("Request to save Customer : {}", customerDTO);
+		Customer customer = customerMapper.toEntity(customerDTO);
+		customer = customerRepository.save(customer);
+		CustomerDTO result = customerMapper.toDto(customer);
+
+		customerSearchRepository.save(customer);
+		customerSearchRepository.save(customer);
+
+		return result;
+	}
+
+	/**
+	 * Get all the customers.
+	 *
+	 * @param pageable the pagination information
+	 * @return the list of entities
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public Page<CustomerDTO> findAll(Pageable pageable) {
+		log.debug("Request to get all Customers");
+		return customerRepository.findAll(pageable).map(customerMapper::toDto);
+	}
+
+	/**
+	 * Get one customer by id.
+	 *
+	 * @param id the id of the entity
+	 * @return the entity
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public Optional<CustomerDTO> findOne(Long id) {
+		log.debug("Request to get Customer : {}", id);
+		return customerRepository.findById(id).map(customerMapper::toDto);
+	}
+
+	/**
+	 * Delete the customer by id.
+	 *
+	 * @param id the id of the entity
+	 */
+	@Override
+	public void delete(Long id) {
+		log.debug("Request to delete Customer : {}", id);
+		customerRepository.deleteById(id);
+		customerSearchRepository.deleteById(id);
+	}
+
+	/**
+	 * Search for the customer corresponding to the query.
+	 *
+	 * @param query    the query of the search
+	 * @param pageable the pagination information
+	 * @return the list of entities
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public Page<CustomerDTO> search(String query, Pageable pageable) {
+		log.debug("Request to search for a page of Customers for query {}", query);
+		return customerSearchRepository.search(queryStringQuery(query), pageable).map(customerMapper::toDto);
+	}
+
+	/**
+	 * Send sms notification to registered customer
+	 *
+	 * @param mobileNumber the mobileNumber to send sms
 	 * @return the sms sending status
 	 */
 	@Override
 	public String sendSms(String mobileNumber) {
-		
+
 		try {
-			 Message.creator(new PhoneNumber(mobileNumber), new PhoneNumber("+18166232986"),
-					 "Welcome! Thank you for registering with us").create();
+			Message.creator(new PhoneNumber(mobileNumber), new PhoneNumber("+18166232986"),
+					"Welcome! Thank you for registering with us").create();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "Error while sending sms";
 		}
-		
+
 		return "SMS Sent Success!";
 	}
-	
+
 	/**
-	 * Send email notification to registered customer 
+	 * Send email notification to registered customer
 	 *
-	 * @param email
-	 *            the mobileNumber to send email
+	 * @param email the mobileNumber to send email
 	 * @return the email sending status
 	 */
 	@Override
 	public String sendEmail(String email) {
-		
+
 		MimeMessage message = sender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
-		
+
 		try {
 			helper.setTo(email);
 			helper.setText("Thank you for registering with us!!!");
@@ -209,56 +213,69 @@ public class CustomerServiceImpl implements CustomerService {
 			e.printStackTrace();
 			return "Error while sending mail ..";
 		}
-		
+
 		sender.send(message);
 		return "Mail Sent Success!";
 
 	}
 
-    /**
-     * Get customersReport.
-     *			     
-     * @return the byte[]
-	 * @throws JRException 
-     */
+	/**
+	 * Get customersReport.
+	 * 
+	 * @return the byte[]
+	 * @throws JRException
+	 */
 	@Override
 	public byte[] getPdfAllCustomers() throws JRException {
-		
-		   log.debug("Request to pdf of all customers");
-		
-		   JasperReport jr = JasperCompileManager.compileReport("CustomerDetails.jrxml");
-		
-	       //Preparing parameters
-			Map<String, Object> parameters = new HashMap<String, Object>();
-			parameters.put("customer", jr);
-						
-			Connection conn = null;
-			try {
-				conn = dataSource.getConnection();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			JasperPrint jp = JasperFillManager.fillReport(jr, parameters, conn);
-			
-			//JasperExportManager.exportReportToPdfFile(jp, "UserNeeds.pdf");
-			
-			return JasperExportManager.exportReportToPdf(jp);
+
+		log.debug("Request to pdf of all customers");
+
+		JasperReport jr = JasperCompileManager.compileReport("CustomerDetails.jrxml");
+
+		// Preparing parameters
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("customer", jr);
+
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		JasperPrint jp = JasperFillManager.fillReport(jr, parameters, conn);
+
+		// JasperExportManager.exportReportToPdfFile(jp, "UserNeeds.pdf");
+
+		return JasperExportManager.exportReportToPdf(jp);
 	}
 
 	@Override
-	public OTPResponse sendSMS(long numbers) {
-		String message="Dear User, Enter your OTP to complete registration. OTP to verify your Mobile is ";
-		return smsResourceApi.sendSMS(message, apiKey, numbers, SMSsender);
+	public OTPResponse sendSMS(Long numbers) {
+		if (numbers.toString().substring(0, 2).equals("91")) {
+			log.info("it is an indian number");
+			String message = "Dear User, Enter your OTP to complete registration. OTP to verify your Mobile is ";
+			return smsResourceApiIN.sendSMS(message, apiKey_IN, numbers, SMSsender_IN);
+		} else {
+			log.info("it is not an indian number");
+			String message = "Dear User, Enter your OTP to complete registration. OTP to verify your Mobile is ";
+			return smsResourceApiUK.sendSMS(message, apiKey_UK, numbers, SMSsender_UK);
+		}
+
 	}
 
 	@Override
-	public OTPChallenge verifyOTP(long numbers, String code) {
-		return smsResourceApi.verifyOTP(numbers, code, apiKey);
+	public OTPChallenge verifyOTP(Long numbers, String code) {
+		if (numbers.toString().substring(0, 2).equals("91")) {
+			return smsResourceApiIN.verifyOTP(numbers, code, apiKey_IN);
+		} else {
+			return smsResourceApiUK.verifyOTP(numbers, code, apiKey_UK);
+
+		}
 	}
-	
+
 	@Override
 	public Customer findByReference(String reference) {
-			return customerRepository.findByReference(reference);
+		return customerRepository.findByReference(reference);
 	}
 
 	@Override
