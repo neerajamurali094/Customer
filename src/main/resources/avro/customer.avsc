@@ -1,0 +1,42 @@
+[
+ 
+	{
+	"namespace":"com.diviso.graeshoppe.avro",
+	"type":"record",
+	"name":"Customer",
+	"fields":[
+		{"name":"id",
+		"type":["null","long"]},
+		
+		{"name":"reference",
+		"type":["null","string"],
+		"default": "NONE"},
+		
+		{"name":"name",
+		"type":["null","string"],
+		"default": "NONE"},
+		
+		{"name":"mobileNumber",
+		"type":["null","long"],
+		"default": "NONE"},
+		
+		{"name":"phoneCode",
+		"type":["null","long"],
+		"default": "NONE"},
+		
+		{"name":"telephone",
+		"type":["null","long"],
+		"default": "NONE"},
+		
+		{"name":"email",
+		"type":["null","string"],
+		"default": "NONE"},
+		
+		{"name":"status",
+		"type":["null","string"],
+		"default": "NONE"}
+		
+		]
+	}
+	
+]

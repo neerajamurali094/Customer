@@ -91,6 +91,8 @@ public interface CustomerService {
 	Customer findByReference(String reference);
 
 	Optional<CustomerDTO> findByMobileNumber(Long mobileNumber);
+
+	boolean publishMesssage(Long customerId);
     
 
 }

@@ -5,8 +5,10 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -18,17 +20,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.diviso.graeshoppe.avro.Customer.Builder;
 
 import com.diviso.graeshoppe.client.SMS.SMSResourceApiIN;
 import com.diviso.graeshoppe.client.SMS.SMSResourceApiUK;
-
+import com.diviso.graeshoppe.config.MessageBinderConfiguration;
 import com.diviso.graeshoppe.domain.Customer;
 import com.diviso.graeshoppe.domain.OTPChallenge;
 import com.diviso.graeshoppe.domain.OTPResponse;
+
 import com.diviso.graeshoppe.repository.ContactRepository;
 import com.diviso.graeshoppe.repository.CustomerRepository;
 import com.diviso.graeshoppe.repository.search.CustomerSearchRepository;
@@ -60,6 +65,10 @@ public class CustomerServiceImpl implements CustomerService {
 	private final CustomerMapper customerMapper;
 
 	private final CustomerSearchRepository customerSearchRepository;
+	
+	
+	@Autowired
+	private MessageBinderConfiguration messageChannel;
 
 	@Value("${smsgateway.credentials.in-apiKey}")
 	private String apiKey_IN;
@@ -116,6 +125,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 		customerSearchRepository.save(customer);
 		customerSearchRepository.save(customer);
+        publishMesssage(customer.getId());
 
 		return result;
 	}
@@ -282,5 +292,16 @@ public class CustomerServiceImpl implements CustomerService {
 	public Optional<CustomerDTO> findByMobileNumber(Long mobileNumber) {
 
 		return customerRepository.findByContact_MobileNumber(mobileNumber).map(customerMapper::toDto);
+	}
+	
+	@Override
+	public boolean publishMesssage(Long customerId) {
+		Customer customer = customerRepository.findById(customerId).get();
+		Builder customerAvro = com.diviso.graeshoppe.avro.Customer.newBuilder()
+				.setId(customer.getId());
+				
+		com.diviso.graeshoppe.avro.Customer message =customerAvro.build();
+		return messageChannel.customerOut().send(MessageBuilder.withPayload(message).build());
+
 	}
 }

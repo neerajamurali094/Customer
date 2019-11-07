@@ -42,6 +42,35 @@ spring:
     jackson:
         serialization:
             indent-output: true
+            
+    cloud:
+        stream:
+            kafka:
+                binder:
+                    brokers: dev.servers.divisosofttech.com
+                    zk-nodes: dev.servers.divisosofttech.com
+                    configuration:
+                       key.serializer: org.apache.kafka.common.serialization.ByteArraySerializer
+                       value.serializer: com.diviso.graeshoppe.config.SerdeConfig
+            bindings:
+                output:
+                    destination: topic-jhipster
+                customer:
+                    destination: customer
+                    contentType: application/*+avro
+                    producer:
+                       useNativeEncoding: true
+                notification:
+                    destination: notification
+                    contentType: application/*+avro
+                    producer:
+                       useNativeEncoding: true                       
+            schemaRegistryClient:
+              endpoint: http://dev.servers.divisosofttech.com:8081
+            schema:
+              avro:
+                schema-locations: classpath:avro/customer.avsc
+
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         url: jdbc:mysql://localhost:3306/customer?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC
