@@ -10,11 +10,11 @@
 		
 		{"name":"reference",
 		"type":["null","string"],
-		"default": "null"},
+		"default": null},
 		
 		{"name":"name",
 		"type":["null","string"],
-		"default": "null"},
+		"default": null},
 		
 		{"name":"mobileNumber",
 		"type":["null","long"],
@@ -30,11 +30,11 @@
 		
 		{"name":"email",
 		"type":["null","string"],
-		"default": "null"},
+		"default": null},
 		
 		{"name":"status",
 		"type":["null","string"],
-		"default": "null"}
+		"default": null}
 		
 		]
 	}
