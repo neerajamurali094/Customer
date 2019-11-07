@@ -128,9 +128,12 @@ public class CustomerServiceImpl implements CustomerService {
 		customerSearchRepository.save(customer);
 		customerSearchRepository.save(customer);
 		
+	
         publishMesssage(customer.getId());
+        
+        log.debug("------------------------------------------to publish");
 
-		return result;
+        return result;
 	}
 
 	/**
@@ -299,6 +302,8 @@ public class CustomerServiceImpl implements CustomerService {
 	
 	@Override
 	public boolean publishMesssage(Long customerId) {
+		
+        log.debug("------------------------------------------publish method");
 		Customer customer = customerRepository.findById(customerId).get();
 		Builder customerAvro = com.diviso.graeshoppe.avro.Customer.newBuilder()
 				.setId(customer.getId());
