@@ -306,8 +306,8 @@ public class CustomerServiceImpl implements CustomerService {
         log.debug("------------------------------------------publish method");
 		Customer customer = customerRepository.findById(customerId).get();
 		Builder customerAvro = com.diviso.graeshoppe.avro.Customer.newBuilder()
-				.setId(customer.getId());
-				
+				.setId(customer.getId())
+				.setName(customer.getName());
 		com.diviso.graeshoppe.avro.Customer message =customerAvro.build();
 		return messageChannel.customerOut().send(MessageBuilder.withPayload(message).build());
 
