@@ -129,9 +129,9 @@ public class CustomerServiceImpl implements CustomerService {
 		customerSearchRepository.save(customer);
 		
 	
-        publishMesssage(customer.getId());
+        boolean status=publishMesssage(customer.getId());
         
-        log.debug("------------------------------------------to publish");
+        log.debug("------------------------------------------published"+status);
 
         return result;
 	}
