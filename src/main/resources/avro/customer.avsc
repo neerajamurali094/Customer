@@ -18,15 +18,15 @@
 		
 		{"name":"mobileNumber",
 		"type":["null","long"],
-		"default": "0"},
+		"default": null},
 		
 		{"name":"phoneCode",
 		"type":["null","long"],
-		"default": "0"},
+		"default": null},
 		
 		{"name":"telephone",
 		"type":["null","long"],
-		"default": "0"},
+		"default": null},
 		
 		{"name":"email",
 		"type":["null","string"],
