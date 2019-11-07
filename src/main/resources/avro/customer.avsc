@@ -10,31 +10,31 @@
 		
 		{"name":"reference",
 		"type":["null","string"],
-		"default": "NONE"},
+		"default": "null"},
 		
 		{"name":"name",
 		"type":["null","string"],
-		"default": "NONE"},
+		"default": "null"},
 		
 		{"name":"mobileNumber",
 		"type":["null","long"],
-		"default": "NONE"},
+		"default": "0"},
 		
 		{"name":"phoneCode",
 		"type":["null","long"],
-		"default": "NONE"},
+		"default": "0"},
 		
 		{"name":"telephone",
 		"type":["null","long"],
-		"default": "NONE"},
+		"default": "0"},
 		
 		{"name":"email",
 		"type":["null","string"],
-		"default": "NONE"},
+		"default": "null"},
 		
 		{"name":"status",
 		"type":["null","string"],
-		"default": "NONE"}
+		"default": "null"}
 		
 		]
 	}
