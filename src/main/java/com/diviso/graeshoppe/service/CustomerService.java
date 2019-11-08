@@ -92,7 +92,14 @@ public interface CustomerService {
 
 	Optional<CustomerDTO> findByMobileNumber(Long mobileNumber);
 
-	boolean publishMesssage(Long customerId);
+	boolean createPublishMesssage(Customer customer, String status);
+	
+	boolean updatePublishMesssage(Customer customer, String status);
+
+	boolean deleteMesssage(Customer customer, String status);
+
+	CustomerDTO update(CustomerDTO customerDTO);
+
     
 
 }
