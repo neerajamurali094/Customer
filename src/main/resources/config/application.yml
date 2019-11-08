@@ -205,7 +205,7 @@ smsgateway:
    uk-url: https://api.txtlocal.com
    uk-sender: FoodExp
    in-url: https://api.textlocal.in
-   in-sender: TXTLCL
+   in-sender: WINMTS
    credentials:
       uk-apiKey: X8TXzZ3n8Yc-oPcDvBC0CWo8vNvAZoJKzW5KZrqVsF
       in-apiKey: LaOs/+NbOtU-qsVX1aJkKJ0SXK4khv3bInFkyvMWdG
