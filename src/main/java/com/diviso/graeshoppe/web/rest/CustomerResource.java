@@ -121,7 +121,7 @@ public class CustomerResource {
 		if (customerDTO.getId() == null) {
 			throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
 		}
-		CustomerDTO result = customerService.save(customerDTO);
+		CustomerDTO result = customerService.update(customerDTO);
 		return ResponseEntity.ok()
 				.headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, customerDTO.getId().toString())).body(result);
 	}

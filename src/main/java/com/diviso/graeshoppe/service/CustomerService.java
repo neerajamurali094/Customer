@@ -91,6 +91,15 @@ public interface CustomerService {
 	Customer findByReference(String reference);
 
 	Optional<CustomerDTO> findByMobileNumber(Long mobileNumber);
+
+	boolean createPublishMesssage(Customer customer, String status);
+	
+	boolean updatePublishMesssage(Customer customer, String status);
+
+	boolean deleteMesssage(Customer customer, String status);
+
+	CustomerDTO update(CustomerDTO customerDTO);
+
     
 
 }
