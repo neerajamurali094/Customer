@@ -2,6 +2,7 @@ package com.diviso.graeshoppe.service.impl;
 
 import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
+import java.nio.ByteBuffer;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -40,6 +41,7 @@ import com.diviso.graeshoppe.repository.search.CustomerSearchRepository;
 import com.diviso.graeshoppe.service.CustomerService;
 import com.diviso.graeshoppe.service.dto.CustomerDTO;
 import com.diviso.graeshoppe.service.mapper.CustomerMapper;
+import com.diviso.graeshoppe.service.mapper.avro.CustomerAvroMapper;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
@@ -64,6 +66,8 @@ public class CustomerServiceImpl implements CustomerService {
 
 	private final CustomerMapper customerMapper;
 
+	private final CustomerAvroMapper customerAvroMapper;
+	
 	private final CustomerSearchRepository customerSearchRepository;
 	
 	
@@ -104,9 +108,10 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	public CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper customerMapper,
-			CustomerSearchRepository customerSearchRepository) {
+			CustomerAvroMapper customerAvroMapper,CustomerSearchRepository customerSearchRepository) {
 		this.customerRepository = customerRepository;
 		this.customerMapper = customerMapper;
+		this.customerAvroMapper = customerAvroMapper;
 		this.customerSearchRepository = customerSearchRepository;
 	}
 
@@ -124,7 +129,7 @@ public class CustomerServiceImpl implements CustomerService {
 		customer = customerRepository.save(customer);
 		CustomerDTO result = customerMapper.toDto(customer);
 		customerSearchRepository.save(customer);
-		String status="save";
+		String status="create";
         boolean publishstatus=createPublishMesssage(customer,status);
         
         log.debug("------------------------------------------published"+publishstatus);
@@ -137,11 +142,18 @@ public class CustomerServiceImpl implements CustomerService {
 		
         log.debug("------------------------------------------publish method"+status);
 
-		Builder customerAvro = com.diviso.graeshoppe.avro.Customer.newBuilder()
-				.setId(customer.getId())
-				.setName(customer.getName())
-				.setStatus(status);
-		com.diviso.graeshoppe.avro.Customer message =customerAvro.build();
+		/*
+		 * Builder customerAvro = com.diviso.graeshoppe.avro.Customer.newBuilder()
+		 * .setId(customer.getId()) .setName(customer.getName()) .setStatus(status);
+		 */
+	//	Builder customerAvro  = customerAvroMapper.modelToAvro(customer);
+		//com.diviso.graeshoppe.avro.Customer message =customerAvro.build();
+		com.diviso.graeshoppe.avro.Customer message =customerAvroMapper.modelToAvro(customer);
+		message .setStatus(status);
+		/*
+		 * com.diviso.graeshoppe.avro.Customer c; c.getPhoto().get
+		 */
+		
 		return messageChannel.customerOut().send(MessageBuilder.withPayload(message).build());
 
 	}
@@ -212,17 +224,15 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public void delete(Long id) {
 		log.debug("Request to delete Customer : {}", id);
-		Customer customer=customerRepository.findById(id).get();
+		//Customer customer=customerRepository.findById(id).get();
 		customerRepository.deleteById(id);
 		
 		customerSearchRepository.deleteById(id);
 		
-		
-		if((customerRepository.existsById(id))==false) {
-			String status="deleted";
-			deleteMesssage(customer, status);
-		}
-		
+		/*
+		 * if((customerRepository.existsById(id))==false) { String status="deleted";
+		 * deleteMesssage(customer, status); }
+		 */
 		
 	}
 	
