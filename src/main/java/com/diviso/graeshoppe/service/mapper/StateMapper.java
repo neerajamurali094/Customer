@@ -11,10 +11,12 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", uses = {CountryMapper.class})
 public interface StateMapper extends EntityMapper<StateDTO, State> {
 
-    @Mapping(source = "country.id", target = "countryId")
+    @Override
+	@Mapping(source = "country.id", target = "countryId")
     StateDTO toDto(State state);
 
-    @Mapping(source = "countryId", target = "country")
+    @Override
+	@Mapping(source = "countryId", target = "country")
     @Mapping(target = "cities", ignore = true)
     State toEntity(StateDTO stateDTO);
 

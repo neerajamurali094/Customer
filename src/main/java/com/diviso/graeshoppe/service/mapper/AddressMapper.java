@@ -11,11 +11,13 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", uses = {CustomerMapper.class, CountryMapper.class})
 public interface AddressMapper extends EntityMapper<AddressDTO, Address> {
 
-    @Mapping(source = "customer.id", target = "customerId")
+    @Override
+	@Mapping(source = "customer.id", target = "customerId")
     @Mapping(source = "country.id", target = "countryId")
     AddressDTO toDto(Address address);
 
-    @Mapping(source = "customerId", target = "customer")
+    @Override
+	@Mapping(source = "customerId", target = "customer")
     @Mapping(source = "countryId", target = "country")
     Address toEntity(AddressDTO addressDTO);
 

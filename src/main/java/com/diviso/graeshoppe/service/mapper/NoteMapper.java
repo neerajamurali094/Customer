@@ -11,10 +11,12 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", uses = {CustomerMapper.class})
 public interface NoteMapper extends EntityMapper<NoteDTO, Note> {
 
-    @Mapping(source = "customer.id", target = "customerId")
+    @Override
+	@Mapping(source = "customer.id", target = "customerId")
     NoteDTO toDto(Note note);
 
-    @Mapping(source = "customerId", target = "customer")
+    @Override
+	@Mapping(source = "customerId", target = "customer")
     Note toEntity(NoteDTO noteDTO);
 
     default Note fromId(Long id) {

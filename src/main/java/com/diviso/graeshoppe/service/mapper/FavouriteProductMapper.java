@@ -11,10 +11,12 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", uses = {CustomerMapper.class})
 public interface FavouriteProductMapper extends EntityMapper<FavouriteProductDTO, FavouriteProduct> {
 
-    @Mapping(source = "customer.id", target = "customerId")
+    @Override
+	@Mapping(source = "customer.id", target = "customerId")
     FavouriteProductDTO toDto(FavouriteProduct favouriteProduct);
 
-    @Mapping(source = "customerId", target = "customer")
+    @Override
+	@Mapping(source = "customerId", target = "customer")
     FavouriteProduct toEntity(FavouriteProductDTO favouriteProductDTO);
 
     default FavouriteProduct fromId(Long id) {

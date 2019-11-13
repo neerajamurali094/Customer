@@ -22,6 +22,7 @@ logging:
 eureka:
     instance:
         prefer-ip-address: true
+        hostname: dev.ci2.divisosofttech.com
     client:
         service-url:
             defaultZone: https://admin:${jhipster.registry.password}@lxi-registry-server.herokuapp.com/eureka/

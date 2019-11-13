@@ -12,7 +12,8 @@ import org.mapstruct.*;
 public interface CountryMapper extends EntityMapper<CountryDTO, Country> {
 
 
-    @Mapping(target = "addresses", ignore = true)
+    @Override
+	@Mapping(target = "addresses", ignore = true)
     @Mapping(target = "states", ignore = true)
     Country toEntity(CountryDTO countryDTO);
 

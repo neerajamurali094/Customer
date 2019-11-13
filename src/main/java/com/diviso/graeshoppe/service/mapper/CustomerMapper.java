@@ -11,10 +11,12 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", uses = {ContactMapper.class})
 public interface CustomerMapper extends EntityMapper<CustomerDTO, Customer> {
 
-    @Mapping(source = "contact.id", target = "contactId")
+    @Override
+	@Mapping(source = "contact.id", target = "contactId")
     CustomerDTO toDto(Customer customer);
 
-    @Mapping(source = "contactId", target = "contact")
+    @Override
+	@Mapping(source = "contactId", target = "contact")
     @Mapping(target = "addresses", ignore = true)
     @Mapping(target = "notes", ignore = true)
     @Mapping(target = "favouritestores", ignore = true)

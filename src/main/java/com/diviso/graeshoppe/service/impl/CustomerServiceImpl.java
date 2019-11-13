@@ -5,11 +5,8 @@ import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.sql.DataSource;
