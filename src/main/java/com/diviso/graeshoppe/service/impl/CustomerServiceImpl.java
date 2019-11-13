@@ -36,7 +36,9 @@ import com.diviso.graeshoppe.repository.ContactRepository;
 import com.diviso.graeshoppe.repository.CustomerRepository;
 import com.diviso.graeshoppe.repository.search.CustomerSearchRepository;
 import com.diviso.graeshoppe.service.CustomerService;
+import com.diviso.graeshoppe.service.UniqueCustomerIDService;
 import com.diviso.graeshoppe.service.dto.CustomerDTO;
+import com.diviso.graeshoppe.service.dto.UniqueCustomerIDDTO;
 import com.diviso.graeshoppe.service.mapper.CustomerMapper;
 import com.diviso.graeshoppe.service.mapper.avro.CustomerAvroMapper;
 import com.twilio.Twilio;
@@ -83,6 +85,8 @@ public class CustomerServiceImpl implements CustomerService {
 	@Value("${smsgateway.uk-sender}")
 	private String SMSsender_UK;
 
+	@Value("${app.customerId-prefix}")
+	private String uniqueIdPrefix;
 	@Autowired
 	private ContactRepository contactRepository;
 
@@ -90,7 +94,8 @@ public class CustomerServiceImpl implements CustomerService {
 	private SMSResourceApiUK smsResourceApiUK;
 	@Autowired
 	private SMSResourceApiIN smsResourceApiIN;
-
+	@Autowired
+	private UniqueCustomerIDService uniqueIdService;
 	@Autowired
 	private JavaMailSender sender;
 
@@ -122,6 +127,8 @@ public class CustomerServiceImpl implements CustomerService {
 	public CustomerDTO save(CustomerDTO customerDTO) {
 		
 		log.debug("Request to save Customer : {}", customerDTO);
+		UniqueCustomerIDDTO uniqueId=uniqueIdService.save(new UniqueCustomerIDDTO());
+		customerDTO.setCustomerUniqueId(uniqueIdPrefix+""+uniqueId.getId());
 		Customer customer = customerMapper.toEntity(customerDTO);
 		customer = customerRepository.save(customer);
 		CustomerDTO result = customerMapper.toDto(customer);

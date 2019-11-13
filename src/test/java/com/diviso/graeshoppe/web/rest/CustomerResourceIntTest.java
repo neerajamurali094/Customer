@@ -52,6 +52,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = CustomerApp.class)
 public class CustomerResourceIntTest {
 
+    private static final String DEFAULT_CUSTOMER_UNIQUE_ID = "AAAAAAAAAA";
+    private static final String UPDATED_CUSTOMER_UNIQUE_ID = "BBBBBBBBBB";
+
     private static final String DEFAULT_REFERENCE = "AAAAAAAAAA";
     private static final String UPDATED_REFERENCE = "BBBBBBBBBB";
 
@@ -140,6 +143,7 @@ public class CustomerResourceIntTest {
      */
     public static Customer createEntity(EntityManager em) {
         Customer customer = new Customer()
+            .customerUniqueId(DEFAULT_CUSTOMER_UNIQUE_ID)
             .reference(DEFAULT_REFERENCE)
             .name(DEFAULT_NAME)
             .searchKey(DEFAULT_SEARCH_KEY)
@@ -175,6 +179,7 @@ public class CustomerResourceIntTest {
         List<Customer> customerList = customerRepository.findAll();
         assertThat(customerList).hasSize(databaseSizeBeforeCreate + 1);
         Customer testCustomer = customerList.get(customerList.size() - 1);
+        assertThat(testCustomer.getCustomerUniqueId()).isEqualTo(DEFAULT_CUSTOMER_UNIQUE_ID);
         assertThat(testCustomer.getReference()).isEqualTo(DEFAULT_REFERENCE);
         assertThat(testCustomer.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testCustomer.getSearchKey()).isEqualTo(DEFAULT_SEARCH_KEY);
@@ -225,6 +230,7 @@ public class CustomerResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(customer.getId().intValue())))
+            .andExpect(jsonPath("$.[*].customerUniqueId").value(hasItem(DEFAULT_CUSTOMER_UNIQUE_ID.toString())))
             .andExpect(jsonPath("$.[*].reference").value(hasItem(DEFAULT_REFERENCE.toString())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].searchKey").value(hasItem(DEFAULT_SEARCH_KEY.toString())))
@@ -249,6 +255,7 @@ public class CustomerResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(customer.getId().intValue()))
+            .andExpect(jsonPath("$.customerUniqueId").value(DEFAULT_CUSTOMER_UNIQUE_ID.toString()))
             .andExpect(jsonPath("$.reference").value(DEFAULT_REFERENCE.toString()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
             .andExpect(jsonPath("$.searchKey").value(DEFAULT_SEARCH_KEY.toString()))
@@ -283,6 +290,7 @@ public class CustomerResourceIntTest {
         // Disconnect from session so that the updates on updatedCustomer are not directly saved in db
         em.detach(updatedCustomer);
         updatedCustomer
+            .customerUniqueId(UPDATED_CUSTOMER_UNIQUE_ID)
             .reference(UPDATED_REFERENCE)
             .name(UPDATED_NAME)
             .searchKey(UPDATED_SEARCH_KEY)
@@ -305,6 +313,7 @@ public class CustomerResourceIntTest {
         List<Customer> customerList = customerRepository.findAll();
         assertThat(customerList).hasSize(databaseSizeBeforeUpdate);
         Customer testCustomer = customerList.get(customerList.size() - 1);
+        assertThat(testCustomer.getCustomerUniqueId()).isEqualTo(UPDATED_CUSTOMER_UNIQUE_ID);
         assertThat(testCustomer.getReference()).isEqualTo(UPDATED_REFERENCE);
         assertThat(testCustomer.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testCustomer.getSearchKey()).isEqualTo(UPDATED_SEARCH_KEY);
@@ -376,6 +385,7 @@ public class CustomerResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(customer.getId().intValue())))
+            .andExpect(jsonPath("$.[*].customerUniqueId").value(hasItem(DEFAULT_CUSTOMER_UNIQUE_ID)))
             .andExpect(jsonPath("$.[*].reference").value(hasItem(DEFAULT_REFERENCE)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].searchKey").value(hasItem(DEFAULT_SEARCH_KEY)))

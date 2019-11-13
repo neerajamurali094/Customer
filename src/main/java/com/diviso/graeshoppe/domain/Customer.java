@@ -1,6 +1,7 @@
 package com.diviso.graeshoppe.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -27,6 +28,9 @@ public class Customer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "customer_unique_id")
+    private String customerUniqueId;
 
     @Column(name = "reference")
     private String reference;
@@ -85,6 +89,19 @@ public class Customer implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getCustomerUniqueId() {
+        return customerUniqueId;
+    }
+
+    public Customer customerUniqueId(String customerUniqueId) {
+        this.customerUniqueId = customerUniqueId;
+        return this;
+    }
+
+    public void setCustomerUniqueId(String customerUniqueId) {
+        this.customerUniqueId = customerUniqueId;
     }
 
     public String getReference() {
@@ -368,6 +385,7 @@ public class Customer implements Serializable {
     public String toString() {
         return "Customer{" +
             "id=" + getId() +
+            ", customerUniqueId='" + getCustomerUniqueId() + "'" +
             ", reference='" + getReference() + "'" +
             ", name='" + getName() + "'" +
             ", searchKey='" + getSearchKey() + "'" +

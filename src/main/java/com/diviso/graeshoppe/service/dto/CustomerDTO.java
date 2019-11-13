@@ -11,6 +11,8 @@ public class CustomerDTO implements Serializable {
 
     private Long id;
 
+    private String customerUniqueId;
+
     private String reference;
 
     private String name;
@@ -42,6 +44,14 @@ public class CustomerDTO implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getCustomerUniqueId() {
+        return customerUniqueId;
+    }
+
+    public void setCustomerUniqueId(String customerUniqueId) {
+        this.customerUniqueId = customerUniqueId;
     }
 
     public String getReference() {
@@ -165,6 +175,7 @@ public class CustomerDTO implements Serializable {
     public String toString() {
         return "CustomerDTO{" +
             "id=" + getId() +
+            ", customerUniqueId='" + getCustomerUniqueId() + "'" +
             ", reference='" + getReference() + "'" +
             ", name='" + getName() + "'" +
             ", searchKey='" + getSearchKey() + "'" +

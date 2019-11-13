@@ -1,81 +1,57 @@
 
 entity Customer {
-	 reference String,
-	name String,	 
+	customerUniqueId String,
+	reference String,
+	name String,
 	searchKey String,
-	 card String,
-     curDebt Double,
-     debtDate LocalDate,
-	 maxDebt Double,
-     discount Double,
-	 visible Boolean,
-	 photo AnyBlob
-	}
-
+	card String,
+	curDebt Double,
+	debtDate LocalDate,
+	maxDebt Double,
+	discount Double,
+	visible Boolean,
+	photo AnyBlob
+}
 entity Address {
 	addressLine1 String,
-    addressLine2 String,
-    postCode String
+	addressLine2 String,
+	postCode String
 }
-
 entity Contact {
 	mobileNumber Long,
 	phoneCode Long,
-    telephone Long,
-    email String	
+	telephone Long,
+	email String
 }
-	
 entity Country{
 	code String,
 	name String,
 	phonecode Integer
 }
-
 entity State{
 	name String
 }
-
 entity City{
 	name String
 }
-	
 entity Note {
 	createdDate LocalDate,
 	matter String
-
 }
-
 entity FavouriteProduct {
-
 	productId Long
-
 }
-
 entity FavouriteStore {
-
 	storeId Long
-
 }
-
 entity UniqueCustomerID{
 }
-
 relationship OneToMany {
-	Customer{address} to Address,
-	Customer{note} to Note,
-	Country{address} to Address,
-	Country{state} to State,
-	State{city} to City,
-	Customer{favouritestore} to FavouriteStore,
-	Customer{favouriteproduct} to FavouriteProduct
+	Customer{address} to Address , Customer{note} to Note , Country{address} to Address , Country{state} to State , State{city} to City , Customer{favouritestore} to FavouriteStore , Customer{favouriteproduct} to FavouriteProduct
 }
-
 relationship OneToOne {
 	Customer{contact} to Contact
 }
-
 paginate * with pagination
-
 dto * with mapstruct
-
 service all with serviceImpl
