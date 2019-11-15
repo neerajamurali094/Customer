@@ -97,6 +97,8 @@ public interface CustomerService {
 
 	CustomerDTO update(CustomerDTO customerDTO);
 
+	Boolean checkUserExists(String reference);
+
     
 
 }

@@ -244,6 +244,12 @@ public class CustomerResource {
 		return customerService.findByReference(reference);
 	}
 	
+	
+	@GetMapping("/checkUserExists/{reference}")
+	public Boolean checkUserExists(@PathVariable String reference) {
+		return customerService.checkUserExists(reference);
+	}
+	
 	public void setCustomerRepository(CustomerRepository customerRepository) {
 		this.customerRepository = customerRepository;
 	}

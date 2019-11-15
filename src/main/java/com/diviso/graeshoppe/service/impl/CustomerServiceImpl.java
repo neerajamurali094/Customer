@@ -374,13 +374,23 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public Customer findByReference(String reference) {
-		return customerRepository.findByReference(reference);
+		return customerRepository.findByReference(reference).get();
 	}
 
 	@Override
 	public Optional<CustomerDTO> findByMobileNumber(Long mobileNumber) {
 
 		return customerRepository.findByContact_MobileNumber(mobileNumber).map(customerMapper::toDto);
+	}
+
+	@Override
+	public Boolean checkUserExists(String reference) {
+		Boolean result= false;
+		if(customerRepository.findByReference(reference).isPresent()) {
+			result =  true;
+		}
+		
+		return result;
 	}
 
 }
