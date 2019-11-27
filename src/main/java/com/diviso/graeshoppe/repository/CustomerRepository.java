@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
-	Optional<Customer> findByReference(String reference);
+	Optional<Customer> findByIdpCode(String idpCode);
 	
 	Optional<Customer> findByContact_MobileNumber(Long mobileNumber);
 }

@@ -179,6 +179,44 @@ public class ContactResourceIntTest {
 
     @Test
     @Transactional
+    public void checkMobileNumberIsRequired() throws Exception {
+        int databaseSizeBeforeTest = contactRepository.findAll().size();
+        // set the field null
+        contact.setMobileNumber(null);
+
+        // Create the Contact, which fails.
+        ContactDTO contactDTO = contactMapper.toDto(contact);
+
+        restContactMockMvc.perform(post("/api/contacts")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(contactDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Contact> contactList = contactRepository.findAll();
+        assertThat(contactList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkPhoneCodeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = contactRepository.findAll().size();
+        // set the field null
+        contact.setPhoneCode(null);
+
+        // Create the Contact, which fails.
+        ContactDTO contactDTO = contactMapper.toDto(contact);
+
+        restContactMockMvc.perform(post("/api/contacts")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(contactDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Contact> contactList = contactRepository.findAll();
+        assertThat(contactList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllContacts() throws Exception {
         // Initialize the database
         contactRepository.saveAndFlush(contact);

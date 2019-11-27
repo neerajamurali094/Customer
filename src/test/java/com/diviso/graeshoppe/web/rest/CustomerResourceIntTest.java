@@ -29,8 +29,6 @@ import org.springframework.util.Base64Utils;
 import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 
@@ -52,40 +50,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = CustomerApp.class)
 public class CustomerResourceIntTest {
 
-    private static final String DEFAULT_CUSTOMER_UNIQUE_ID = "AAAAAAAAAA";
-    private static final String UPDATED_CUSTOMER_UNIQUE_ID = "BBBBBBBBBB";
-
-    private static final String DEFAULT_REFERENCE = "AAAAAAAAAA";
-    private static final String UPDATED_REFERENCE = "BBBBBBBBBB";
+    private static final String DEFAULT_IDP_CODE = "AAAAAAAAAA";
+    private static final String UPDATED_IDP_CODE = "BBBBBBBBBB";
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
-    private static final String DEFAULT_SEARCH_KEY = "AAAAAAAAAA";
-    private static final String UPDATED_SEARCH_KEY = "BBBBBBBBBB";
+    private static final String DEFAULT_IDP_SUB = "AAAAAAAAAA";
+    private static final String UPDATED_IDP_SUB = "BBBBBBBBBB";
 
-    private static final String DEFAULT_CARD = "AAAAAAAAAA";
-    private static final String UPDATED_CARD = "BBBBBBBBBB";
+    private static final String DEFAULT_CUSTOMER_UNIQUE_ID = "AAAAAAAAAA";
+    private static final String UPDATED_CUSTOMER_UNIQUE_ID = "BBBBBBBBBB";
 
-    private static final Double DEFAULT_CUR_DEBT = 1D;
-    private static final Double UPDATED_CUR_DEBT = 2D;
+    private static final String DEFAULT_IMAGE_LINK = "AAAAAAAAAA";
+    private static final String UPDATED_IMAGE_LINK = "BBBBBBBBBB";
 
-    private static final LocalDate DEFAULT_DEBT_DATE = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_DEBT_DATE = LocalDate.now(ZoneId.systemDefault());
-
-    private static final Double DEFAULT_MAX_DEBT = 1D;
-    private static final Double UPDATED_MAX_DEBT = 2D;
-
-    private static final Double DEFAULT_DISCOUNT = 1D;
-    private static final Double UPDATED_DISCOUNT = 2D;
-
-    private static final Boolean DEFAULT_VISIBLE = false;
-    private static final Boolean UPDATED_VISIBLE = true;
-
-    private static final byte[] DEFAULT_PHOTO = TestUtil.createByteArray(1, "0");
-    private static final byte[] UPDATED_PHOTO = TestUtil.createByteArray(1, "1");
-    private static final String DEFAULT_PHOTO_CONTENT_TYPE = "image/jpg";
-    private static final String UPDATED_PHOTO_CONTENT_TYPE = "image/png";
+    private static final byte[] DEFAULT_IMAGE = TestUtil.createByteArray(1, "0");
+    private static final byte[] UPDATED_IMAGE = TestUtil.createByteArray(1, "1");
+    private static final String DEFAULT_IMAGE_CONTENT_TYPE = "image/jpg";
+    private static final String UPDATED_IMAGE_CONTENT_TYPE = "image/png";
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -143,18 +126,13 @@ public class CustomerResourceIntTest {
      */
     public static Customer createEntity(EntityManager em) {
         Customer customer = new Customer()
-            .customerUniqueId(DEFAULT_CUSTOMER_UNIQUE_ID)
-            .reference(DEFAULT_REFERENCE)
+            .idpCode(DEFAULT_IDP_CODE)
             .name(DEFAULT_NAME)
-            .searchKey(DEFAULT_SEARCH_KEY)
-            .card(DEFAULT_CARD)
-            .curDebt(DEFAULT_CUR_DEBT)
-            .debtDate(DEFAULT_DEBT_DATE)
-            .maxDebt(DEFAULT_MAX_DEBT)
-            .discount(DEFAULT_DISCOUNT)
-            .visible(DEFAULT_VISIBLE)
-            .photo(DEFAULT_PHOTO)
-            .photoContentType(DEFAULT_PHOTO_CONTENT_TYPE);
+            .idpSub(DEFAULT_IDP_SUB)
+            .customerUniqueId(DEFAULT_CUSTOMER_UNIQUE_ID)
+            .imageLink(DEFAULT_IMAGE_LINK)
+            .image(DEFAULT_IMAGE)
+            .imageContentType(DEFAULT_IMAGE_CONTENT_TYPE);
         return customer;
     }
 
@@ -179,18 +157,13 @@ public class CustomerResourceIntTest {
         List<Customer> customerList = customerRepository.findAll();
         assertThat(customerList).hasSize(databaseSizeBeforeCreate + 1);
         Customer testCustomer = customerList.get(customerList.size() - 1);
-        assertThat(testCustomer.getCustomerUniqueId()).isEqualTo(DEFAULT_CUSTOMER_UNIQUE_ID);
-        assertThat(testCustomer.getReference()).isEqualTo(DEFAULT_REFERENCE);
+        assertThat(testCustomer.getIdpCode()).isEqualTo(DEFAULT_IDP_CODE);
         assertThat(testCustomer.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testCustomer.getSearchKey()).isEqualTo(DEFAULT_SEARCH_KEY);
-        assertThat(testCustomer.getCard()).isEqualTo(DEFAULT_CARD);
-        assertThat(testCustomer.getCurDebt()).isEqualTo(DEFAULT_CUR_DEBT);
-        assertThat(testCustomer.getDebtDate()).isEqualTo(DEFAULT_DEBT_DATE);
-        assertThat(testCustomer.getMaxDebt()).isEqualTo(DEFAULT_MAX_DEBT);
-        assertThat(testCustomer.getDiscount()).isEqualTo(DEFAULT_DISCOUNT);
-        assertThat(testCustomer.isVisible()).isEqualTo(DEFAULT_VISIBLE);
-        assertThat(testCustomer.getPhoto()).isEqualTo(DEFAULT_PHOTO);
-        assertThat(testCustomer.getPhotoContentType()).isEqualTo(DEFAULT_PHOTO_CONTENT_TYPE);
+        assertThat(testCustomer.getIdpSub()).isEqualTo(DEFAULT_IDP_SUB);
+        assertThat(testCustomer.getCustomerUniqueId()).isEqualTo(DEFAULT_CUSTOMER_UNIQUE_ID);
+        assertThat(testCustomer.getImageLink()).isEqualTo(DEFAULT_IMAGE_LINK);
+        assertThat(testCustomer.getImage()).isEqualTo(DEFAULT_IMAGE);
+        assertThat(testCustomer.getImageContentType()).isEqualTo(DEFAULT_IMAGE_CONTENT_TYPE);
 
         // Validate the Customer in Elasticsearch
         verify(mockCustomerSearchRepository, times(1)).save(testCustomer);
@@ -221,6 +194,63 @@ public class CustomerResourceIntTest {
 
     @Test
     @Transactional
+    public void checkIdpCodeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = customerRepository.findAll().size();
+        // set the field null
+        customer.setIdpCode(null);
+
+        // Create the Customer, which fails.
+        CustomerDTO customerDTO = customerMapper.toDto(customer);
+
+        restCustomerMockMvc.perform(post("/api/customers")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(customerDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Customer> customerList = customerRepository.findAll();
+        assertThat(customerList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkCustomerUniqueIdIsRequired() throws Exception {
+        int databaseSizeBeforeTest = customerRepository.findAll().size();
+        // set the field null
+        customer.setCustomerUniqueId(null);
+
+        // Create the Customer, which fails.
+        CustomerDTO customerDTO = customerMapper.toDto(customer);
+
+        restCustomerMockMvc.perform(post("/api/customers")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(customerDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Customer> customerList = customerRepository.findAll();
+        assertThat(customerList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkImageLinkIsRequired() throws Exception {
+        int databaseSizeBeforeTest = customerRepository.findAll().size();
+        // set the field null
+        customer.setImageLink(null);
+
+        // Create the Customer, which fails.
+        CustomerDTO customerDTO = customerMapper.toDto(customer);
+
+        restCustomerMockMvc.perform(post("/api/customers")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(customerDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Customer> customerList = customerRepository.findAll();
+        assertThat(customerList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllCustomers() throws Exception {
         // Initialize the database
         customerRepository.saveAndFlush(customer);
@@ -230,18 +260,13 @@ public class CustomerResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(customer.getId().intValue())))
-            .andExpect(jsonPath("$.[*].customerUniqueId").value(hasItem(DEFAULT_CUSTOMER_UNIQUE_ID.toString())))
-            .andExpect(jsonPath("$.[*].reference").value(hasItem(DEFAULT_REFERENCE.toString())))
+            .andExpect(jsonPath("$.[*].idpCode").value(hasItem(DEFAULT_IDP_CODE.toString())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
-            .andExpect(jsonPath("$.[*].searchKey").value(hasItem(DEFAULT_SEARCH_KEY.toString())))
-            .andExpect(jsonPath("$.[*].card").value(hasItem(DEFAULT_CARD.toString())))
-            .andExpect(jsonPath("$.[*].curDebt").value(hasItem(DEFAULT_CUR_DEBT.doubleValue())))
-            .andExpect(jsonPath("$.[*].debtDate").value(hasItem(DEFAULT_DEBT_DATE.toString())))
-            .andExpect(jsonPath("$.[*].maxDebt").value(hasItem(DEFAULT_MAX_DEBT.doubleValue())))
-            .andExpect(jsonPath("$.[*].discount").value(hasItem(DEFAULT_DISCOUNT.doubleValue())))
-            .andExpect(jsonPath("$.[*].visible").value(hasItem(DEFAULT_VISIBLE.booleanValue())))
-            .andExpect(jsonPath("$.[*].photoContentType").value(hasItem(DEFAULT_PHOTO_CONTENT_TYPE)))
-            .andExpect(jsonPath("$.[*].photo").value(hasItem(Base64Utils.encodeToString(DEFAULT_PHOTO))));
+            .andExpect(jsonPath("$.[*].idpSub").value(hasItem(DEFAULT_IDP_SUB.toString())))
+            .andExpect(jsonPath("$.[*].customerUniqueId").value(hasItem(DEFAULT_CUSTOMER_UNIQUE_ID.toString())))
+            .andExpect(jsonPath("$.[*].imageLink").value(hasItem(DEFAULT_IMAGE_LINK.toString())))
+            .andExpect(jsonPath("$.[*].imageContentType").value(hasItem(DEFAULT_IMAGE_CONTENT_TYPE)))
+            .andExpect(jsonPath("$.[*].image").value(hasItem(Base64Utils.encodeToString(DEFAULT_IMAGE))));
     }
     
     @Test
@@ -255,18 +280,13 @@ public class CustomerResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(customer.getId().intValue()))
-            .andExpect(jsonPath("$.customerUniqueId").value(DEFAULT_CUSTOMER_UNIQUE_ID.toString()))
-            .andExpect(jsonPath("$.reference").value(DEFAULT_REFERENCE.toString()))
+            .andExpect(jsonPath("$.idpCode").value(DEFAULT_IDP_CODE.toString()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
-            .andExpect(jsonPath("$.searchKey").value(DEFAULT_SEARCH_KEY.toString()))
-            .andExpect(jsonPath("$.card").value(DEFAULT_CARD.toString()))
-            .andExpect(jsonPath("$.curDebt").value(DEFAULT_CUR_DEBT.doubleValue()))
-            .andExpect(jsonPath("$.debtDate").value(DEFAULT_DEBT_DATE.toString()))
-            .andExpect(jsonPath("$.maxDebt").value(DEFAULT_MAX_DEBT.doubleValue()))
-            .andExpect(jsonPath("$.discount").value(DEFAULT_DISCOUNT.doubleValue()))
-            .andExpect(jsonPath("$.visible").value(DEFAULT_VISIBLE.booleanValue()))
-            .andExpect(jsonPath("$.photoContentType").value(DEFAULT_PHOTO_CONTENT_TYPE))
-            .andExpect(jsonPath("$.photo").value(Base64Utils.encodeToString(DEFAULT_PHOTO)));
+            .andExpect(jsonPath("$.idpSub").value(DEFAULT_IDP_SUB.toString()))
+            .andExpect(jsonPath("$.customerUniqueId").value(DEFAULT_CUSTOMER_UNIQUE_ID.toString()))
+            .andExpect(jsonPath("$.imageLink").value(DEFAULT_IMAGE_LINK.toString()))
+            .andExpect(jsonPath("$.imageContentType").value(DEFAULT_IMAGE_CONTENT_TYPE))
+            .andExpect(jsonPath("$.image").value(Base64Utils.encodeToString(DEFAULT_IMAGE)));
     }
 
     @Test
@@ -290,18 +310,13 @@ public class CustomerResourceIntTest {
         // Disconnect from session so that the updates on updatedCustomer are not directly saved in db
         em.detach(updatedCustomer);
         updatedCustomer
-            .customerUniqueId(UPDATED_CUSTOMER_UNIQUE_ID)
-            .reference(UPDATED_REFERENCE)
+            .idpCode(UPDATED_IDP_CODE)
             .name(UPDATED_NAME)
-            .searchKey(UPDATED_SEARCH_KEY)
-            .card(UPDATED_CARD)
-            .curDebt(UPDATED_CUR_DEBT)
-            .debtDate(UPDATED_DEBT_DATE)
-            .maxDebt(UPDATED_MAX_DEBT)
-            .discount(UPDATED_DISCOUNT)
-            .visible(UPDATED_VISIBLE)
-            .photo(UPDATED_PHOTO)
-            .photoContentType(UPDATED_PHOTO_CONTENT_TYPE);
+            .idpSub(UPDATED_IDP_SUB)
+            .customerUniqueId(UPDATED_CUSTOMER_UNIQUE_ID)
+            .imageLink(UPDATED_IMAGE_LINK)
+            .image(UPDATED_IMAGE)
+            .imageContentType(UPDATED_IMAGE_CONTENT_TYPE);
         CustomerDTO customerDTO = customerMapper.toDto(updatedCustomer);
 
         restCustomerMockMvc.perform(put("/api/customers")
@@ -313,18 +328,13 @@ public class CustomerResourceIntTest {
         List<Customer> customerList = customerRepository.findAll();
         assertThat(customerList).hasSize(databaseSizeBeforeUpdate);
         Customer testCustomer = customerList.get(customerList.size() - 1);
-        assertThat(testCustomer.getCustomerUniqueId()).isEqualTo(UPDATED_CUSTOMER_UNIQUE_ID);
-        assertThat(testCustomer.getReference()).isEqualTo(UPDATED_REFERENCE);
+        assertThat(testCustomer.getIdpCode()).isEqualTo(UPDATED_IDP_CODE);
         assertThat(testCustomer.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testCustomer.getSearchKey()).isEqualTo(UPDATED_SEARCH_KEY);
-        assertThat(testCustomer.getCard()).isEqualTo(UPDATED_CARD);
-        assertThat(testCustomer.getCurDebt()).isEqualTo(UPDATED_CUR_DEBT);
-        assertThat(testCustomer.getDebtDate()).isEqualTo(UPDATED_DEBT_DATE);
-        assertThat(testCustomer.getMaxDebt()).isEqualTo(UPDATED_MAX_DEBT);
-        assertThat(testCustomer.getDiscount()).isEqualTo(UPDATED_DISCOUNT);
-        assertThat(testCustomer.isVisible()).isEqualTo(UPDATED_VISIBLE);
-        assertThat(testCustomer.getPhoto()).isEqualTo(UPDATED_PHOTO);
-        assertThat(testCustomer.getPhotoContentType()).isEqualTo(UPDATED_PHOTO_CONTENT_TYPE);
+        assertThat(testCustomer.getIdpSub()).isEqualTo(UPDATED_IDP_SUB);
+        assertThat(testCustomer.getCustomerUniqueId()).isEqualTo(UPDATED_CUSTOMER_UNIQUE_ID);
+        assertThat(testCustomer.getImageLink()).isEqualTo(UPDATED_IMAGE_LINK);
+        assertThat(testCustomer.getImage()).isEqualTo(UPDATED_IMAGE);
+        assertThat(testCustomer.getImageContentType()).isEqualTo(UPDATED_IMAGE_CONTENT_TYPE);
 
         // Validate the Customer in Elasticsearch
         verify(mockCustomerSearchRepository, times(1)).save(testCustomer);
@@ -385,18 +395,13 @@ public class CustomerResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(customer.getId().intValue())))
-            .andExpect(jsonPath("$.[*].customerUniqueId").value(hasItem(DEFAULT_CUSTOMER_UNIQUE_ID)))
-            .andExpect(jsonPath("$.[*].reference").value(hasItem(DEFAULT_REFERENCE)))
+            .andExpect(jsonPath("$.[*].idpCode").value(hasItem(DEFAULT_IDP_CODE)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].searchKey").value(hasItem(DEFAULT_SEARCH_KEY)))
-            .andExpect(jsonPath("$.[*].card").value(hasItem(DEFAULT_CARD)))
-            .andExpect(jsonPath("$.[*].curDebt").value(hasItem(DEFAULT_CUR_DEBT.doubleValue())))
-            .andExpect(jsonPath("$.[*].debtDate").value(hasItem(DEFAULT_DEBT_DATE.toString())))
-            .andExpect(jsonPath("$.[*].maxDebt").value(hasItem(DEFAULT_MAX_DEBT.doubleValue())))
-            .andExpect(jsonPath("$.[*].discount").value(hasItem(DEFAULT_DISCOUNT.doubleValue())))
-            .andExpect(jsonPath("$.[*].visible").value(hasItem(DEFAULT_VISIBLE.booleanValue())))
-            .andExpect(jsonPath("$.[*].photoContentType").value(hasItem(DEFAULT_PHOTO_CONTENT_TYPE)))
-            .andExpect(jsonPath("$.[*].photo").value(hasItem(Base64Utils.encodeToString(DEFAULT_PHOTO))));
+            .andExpect(jsonPath("$.[*].idpSub").value(hasItem(DEFAULT_IDP_SUB)))
+            .andExpect(jsonPath("$.[*].customerUniqueId").value(hasItem(DEFAULT_CUSTOMER_UNIQUE_ID)))
+            .andExpect(jsonPath("$.[*].imageLink").value(hasItem(DEFAULT_IMAGE_LINK)))
+            .andExpect(jsonPath("$.[*].imageContentType").value(hasItem(DEFAULT_IMAGE_CONTENT_TYPE)))
+            .andExpect(jsonPath("$.[*].image").value(hasItem(Base64Utils.encodeToString(DEFAULT_IMAGE))));
     }
 
     @Test

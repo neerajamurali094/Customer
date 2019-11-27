@@ -1,4 +1,5 @@
 package com.diviso.graeshoppe.service.dto;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -9,8 +10,10 @@ public class ContactDTO implements Serializable {
 
     private Long id;
 
+    @NotNull
     private Long mobileNumber;
 
+    @NotNull
     private Long phoneCode;
 
     private Long telephone;

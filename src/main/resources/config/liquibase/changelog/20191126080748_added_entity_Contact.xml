@@ -15,22 +15,26 @@
     <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
 
     <!--
-        Added the entity Note.
+        Added the entity Contact.
     -->
-    <changeSet id="20191113073317-1" author="jhipster">
-        <createTable tableName="note">
+    <changeSet id="20191126080748-1" author="jhipster">
+        <createTable tableName="contact">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="created_date" type="date">
+            <column name="mobile_number" type="bigint">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="phone_code" type="bigint">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="telephone" type="bigint">
                 <constraints nullable="true" />
             </column>
 
-            <column name="matter" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="customer_id" type="bigint">
+            <column name="email" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 

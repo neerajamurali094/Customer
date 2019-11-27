@@ -164,6 +164,25 @@ public class FavouriteProductResourceIntTest {
 
     @Test
     @Transactional
+    public void checkProductIdIsRequired() throws Exception {
+        int databaseSizeBeforeTest = favouriteProductRepository.findAll().size();
+        // set the field null
+        favouriteProduct.setProductId(null);
+
+        // Create the FavouriteProduct, which fails.
+        FavouriteProductDTO favouriteProductDTO = favouriteProductMapper.toDto(favouriteProduct);
+
+        restFavouriteProductMockMvc.perform(post("/api/favourite-products")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(favouriteProductDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<FavouriteProduct> favouriteProductList = favouriteProductRepository.findAll();
+        assertThat(favouriteProductList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllFavouriteProducts() throws Exception {
         // Initialize the database
         favouriteProductRepository.saveAndFlush(favouriteProduct);

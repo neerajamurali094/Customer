@@ -42,7 +42,7 @@ ribbon:
         enabled: true
 feign:
     hystrix:
-        enabled: false
+        enabled: true
 #    client:
 #        config:
 #            default:
@@ -199,8 +199,6 @@ jhipster:
         license:
         license-url:
         
-
-
 smsgateway:
    uk-url: https://api.txtlocal.com
    uk-sender: FoodExp

@@ -164,6 +164,25 @@ public class FavouriteStoreResourceIntTest {
 
     @Test
     @Transactional
+    public void checkStoreIdIsRequired() throws Exception {
+        int databaseSizeBeforeTest = favouriteStoreRepository.findAll().size();
+        // set the field null
+        favouriteStore.setStoreId(null);
+
+        // Create the FavouriteStore, which fails.
+        FavouriteStoreDTO favouriteStoreDTO = favouriteStoreMapper.toDto(favouriteStore);
+
+        restFavouriteStoreMockMvc.perform(post("/api/favourite-stores")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(favouriteStoreDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<FavouriteStore> favouriteStoreList = favouriteStoreRepository.findAll();
+        assertThat(favouriteStoreList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllFavouriteStores() throws Exception {
         // Initialize the database
         favouriteStoreRepository.saveAndFlush(favouriteStore);

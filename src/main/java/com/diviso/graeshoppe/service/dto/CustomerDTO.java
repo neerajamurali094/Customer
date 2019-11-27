@@ -1,5 +1,5 @@
 package com.diviso.graeshoppe.service.dto;
-import java.time.LocalDate;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Lob;
@@ -11,30 +11,23 @@ public class CustomerDTO implements Serializable {
 
     private Long id;
 
-    private String customerUniqueId;
-
-    private String reference;
+    @NotNull
+    private String idpCode;
 
     private String name;
 
-    private String searchKey;
+    private String idpSub;
 
-    private String card;
+    @NotNull
+    private String customerUniqueId;
 
-    private Double curDebt;
-
-    private LocalDate debtDate;
-
-    private Double maxDebt;
-
-    private Double discount;
-
-    private Boolean visible;
+    @NotNull
+    private String imageLink;
 
     @Lob
-    private byte[] photo;
+    private byte[] image;
 
-    private String photoContentType;
+    private String imageContentType;
 
     private Long contactId;
 
@@ -46,20 +39,12 @@ public class CustomerDTO implements Serializable {
         this.id = id;
     }
 
-    public String getCustomerUniqueId() {
-        return customerUniqueId;
+    public String getIdpCode() {
+        return idpCode;
     }
 
-    public void setCustomerUniqueId(String customerUniqueId) {
-        this.customerUniqueId = customerUniqueId;
-    }
-
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(String reference) {
-        this.reference = reference;
+    public void setIdpCode(String idpCode) {
+        this.idpCode = idpCode;
     }
 
     public String getName() {
@@ -70,76 +55,44 @@ public class CustomerDTO implements Serializable {
         this.name = name;
     }
 
-    public String getSearchKey() {
-        return searchKey;
+    public String getIdpSub() {
+        return idpSub;
     }
 
-    public void setSearchKey(String searchKey) {
-        this.searchKey = searchKey;
+    public void setIdpSub(String idpSub) {
+        this.idpSub = idpSub;
     }
 
-    public String getCard() {
-        return card;
+    public String getCustomerUniqueId() {
+        return customerUniqueId;
     }
 
-    public void setCard(String card) {
-        this.card = card;
+    public void setCustomerUniqueId(String customerUniqueId) {
+        this.customerUniqueId = customerUniqueId;
     }
 
-    public Double getCurDebt() {
-        return curDebt;
+    public String getImageLink() {
+        return imageLink;
     }
 
-    public void setCurDebt(Double curDebt) {
-        this.curDebt = curDebt;
+    public void setImageLink(String imageLink) {
+        this.imageLink = imageLink;
     }
 
-    public LocalDate getDebtDate() {
-        return debtDate;
+    public byte[] getImage() {
+        return image;
     }
 
-    public void setDebtDate(LocalDate debtDate) {
-        this.debtDate = debtDate;
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
-    public Double getMaxDebt() {
-        return maxDebt;
+    public String getImageContentType() {
+        return imageContentType;
     }
 
-    public void setMaxDebt(Double maxDebt) {
-        this.maxDebt = maxDebt;
-    }
-
-    public Double getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(Double discount) {
-        this.discount = discount;
-    }
-
-    public Boolean isVisible() {
-        return visible;
-    }
-
-    public void setVisible(Boolean visible) {
-        this.visible = visible;
-    }
-
-    public byte[] getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(byte[] photo) {
-        this.photo = photo;
-    }
-
-    public String getPhotoContentType() {
-        return photoContentType;
-    }
-
-    public void setPhotoContentType(String photoContentType) {
-        this.photoContentType = photoContentType;
+    public void setImageContentType(String imageContentType) {
+        this.imageContentType = imageContentType;
     }
 
     public Long getContactId() {
@@ -175,17 +128,12 @@ public class CustomerDTO implements Serializable {
     public String toString() {
         return "CustomerDTO{" +
             "id=" + getId() +
-            ", customerUniqueId='" + getCustomerUniqueId() + "'" +
-            ", reference='" + getReference() + "'" +
+            ", idpCode='" + getIdpCode() + "'" +
             ", name='" + getName() + "'" +
-            ", searchKey='" + getSearchKey() + "'" +
-            ", card='" + getCard() + "'" +
-            ", curDebt=" + getCurDebt() +
-            ", debtDate='" + getDebtDate() + "'" +
-            ", maxDebt=" + getMaxDebt() +
-            ", discount=" + getDiscount() +
-            ", visible='" + isVisible() + "'" +
-            ", photo='" + getPhoto() + "'" +
+            ", idpSub='" + getIdpSub() + "'" +
+            ", customerUniqueId='" + getCustomerUniqueId() + "'" +
+            ", imageLink='" + getImageLink() + "'" +
+            ", image='" + getImage() + "'" +
             ", contact=" + getContactId() +
             "}";
     }

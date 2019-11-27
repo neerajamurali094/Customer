@@ -41,9 +41,7 @@ import com.diviso.graeshoppe.service.dto.CustomerDTO;
 import com.diviso.graeshoppe.service.dto.UniqueCustomerIDDTO;
 import com.diviso.graeshoppe.service.mapper.CustomerMapper;
 import com.diviso.graeshoppe.service.mapper.avro.CustomerAvroMapper;
-import com.twilio.Twilio;
-import com.twilio.rest.api.v2010.account.Message;
-import com.twilio.type.PhoneNumber;
+
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -102,12 +100,6 @@ public class CustomerServiceImpl implements CustomerService {
 	@Autowired
 	DataSource dataSource;
 
-	private final static String ACCOUNT_SID = "ACe660cc3e88299624df35f2a6d066c7cc";
-	private final static String AUTH_ID = "32f1e90519be08b568947c78211ff195";
-	private final static String TWILIO_NUMBER = "+18166232986";
-	static {
-		Twilio.init(ACCOUNT_SID, AUTH_ID);
-	}
 
 	public CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper customerMapper,
 			CustomerAvroMapper customerAvroMapper,CustomerSearchRepository customerSearchRepository) {
@@ -271,26 +263,6 @@ public class CustomerServiceImpl implements CustomerService {
 		return customerSearchRepository.search(queryStringQuery(query), pageable).map(customerMapper::toDto);
 	}
 
-	/**
-	 * Send sms notification to registered customer
-	 *
-	 * @param mobileNumber the mobileNumber to send sms
-	 * @return the sms sending status
-	 */
-	@Override
-	public String sendSms(String mobileNumber) {
-
-		try {
-			Message.creator(new PhoneNumber(mobileNumber), new PhoneNumber("+18166232986"),
-					"Welcome! Thank you for registering with us").create();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "Error while sending sms";
-		}
-
-		return "SMS Sent Success!";
-	}
 
 	/**
 	 * Send email notification to registered customer
@@ -373,8 +345,8 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public Customer findByReference(String reference) {
-		return customerRepository.findByReference(reference).get();
+	public Customer findByIdpCode(String idpCode) {
+		return customerRepository.findByIdpCode(idpCode).get();
 	}
 
 	@Override
@@ -384,9 +356,9 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public Boolean checkUserExists(String reference) {
+	public Boolean checkUserExists(String idpCode) {
 		Boolean result= false;
-		if(customerRepository.findByReference(reference).isPresent()) {
+		if(customerRepository.findByIdpCode(idpCode).isPresent()) {
 			result =  true;
 		}
 		

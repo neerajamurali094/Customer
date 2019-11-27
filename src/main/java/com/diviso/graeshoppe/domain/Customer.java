@@ -6,10 +6,10 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
@@ -29,53 +29,35 @@ public class Customer implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "customer_unique_id")
-    private String customerUniqueId;
-
-    @Column(name = "reference")
-    private String reference;
+    @NotNull
+    @Column(name = "idp_code", nullable = false)
+    private String idpCode;
 
     @Column(name = "name")
     private String name;
 
-    @Column(name = "search_key")
-    private String searchKey;
+    @Column(name = "idp_sub")
+    private String idpSub;
 
-    @Column(name = "card")
-    private String card;
+    @NotNull
+    @Column(name = "customer_unique_id", nullable = false)
+    private String customerUniqueId;
 
-    @Column(name = "cur_debt")
-    private Double curDebt;
-
-    @Column(name = "debt_date")
-    private LocalDate debtDate;
-
-    @Column(name = "max_debt")
-    private Double maxDebt;
-
-    @Column(name = "discount")
-    private Double discount;
-
-    @Column(name = "visible")
-    private Boolean visible;
+    @NotNull
+    @Column(name = "image_link", nullable = false)
+    private String imageLink;
 
     @Lob
-    @Column(name = "photo")
-    private byte[] photo;
+    @Column(name = "image")
+    private byte[] image;
 
-    @Column(name = "photo_content_type")
-    private String photoContentType;
+    @Column(name = "image_content_type")
+    private String imageContentType;
 
     @OneToOne
     @JoinColumn(unique = true)
     private Contact contact;
 
-    @OneToMany(mappedBy = "customer")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<Address> addresses = new HashSet<>();
-    @OneToMany(mappedBy = "customer")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<Note> notes = new HashSet<>();
     @OneToMany(mappedBy = "customer")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<FavouriteStore> favouritestores = new HashSet<>();
@@ -91,30 +73,17 @@ public class Customer implements Serializable {
         this.id = id;
     }
 
-    public String getCustomerUniqueId() {
-        return customerUniqueId;
+    public String getIdpCode() {
+        return idpCode;
     }
 
-    public Customer customerUniqueId(String customerUniqueId) {
-        this.customerUniqueId = customerUniqueId;
+    public Customer idpCode(String idpCode) {
+        this.idpCode = idpCode;
         return this;
     }
 
-    public void setCustomerUniqueId(String customerUniqueId) {
-        this.customerUniqueId = customerUniqueId;
-    }
-
-    public String getReference() {
-        return reference;
-    }
-
-    public Customer reference(String reference) {
-        this.reference = reference;
-        return this;
-    }
-
-    public void setReference(String reference) {
-        this.reference = reference;
+    public void setIdpCode(String idpCode) {
+        this.idpCode = idpCode;
     }
 
     public String getName() {
@@ -130,121 +99,69 @@ public class Customer implements Serializable {
         this.name = name;
     }
 
-    public String getSearchKey() {
-        return searchKey;
+    public String getIdpSub() {
+        return idpSub;
     }
 
-    public Customer searchKey(String searchKey) {
-        this.searchKey = searchKey;
+    public Customer idpSub(String idpSub) {
+        this.idpSub = idpSub;
         return this;
     }
 
-    public void setSearchKey(String searchKey) {
-        this.searchKey = searchKey;
+    public void setIdpSub(String idpSub) {
+        this.idpSub = idpSub;
     }
 
-    public String getCard() {
-        return card;
+    public String getCustomerUniqueId() {
+        return customerUniqueId;
     }
 
-    public Customer card(String card) {
-        this.card = card;
+    public Customer customerUniqueId(String customerUniqueId) {
+        this.customerUniqueId = customerUniqueId;
         return this;
     }
 
-    public void setCard(String card) {
-        this.card = card;
+    public void setCustomerUniqueId(String customerUniqueId) {
+        this.customerUniqueId = customerUniqueId;
     }
 
-    public Double getCurDebt() {
-        return curDebt;
+    public String getImageLink() {
+        return imageLink;
     }
 
-    public Customer curDebt(Double curDebt) {
-        this.curDebt = curDebt;
+    public Customer imageLink(String imageLink) {
+        this.imageLink = imageLink;
         return this;
     }
 
-    public void setCurDebt(Double curDebt) {
-        this.curDebt = curDebt;
+    public void setImageLink(String imageLink) {
+        this.imageLink = imageLink;
     }
 
-    public LocalDate getDebtDate() {
-        return debtDate;
+    public byte[] getImage() {
+        return image;
     }
 
-    public Customer debtDate(LocalDate debtDate) {
-        this.debtDate = debtDate;
+    public Customer image(byte[] image) {
+        this.image = image;
         return this;
     }
 
-    public void setDebtDate(LocalDate debtDate) {
-        this.debtDate = debtDate;
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
-    public Double getMaxDebt() {
-        return maxDebt;
+    public String getImageContentType() {
+        return imageContentType;
     }
 
-    public Customer maxDebt(Double maxDebt) {
-        this.maxDebt = maxDebt;
+    public Customer imageContentType(String imageContentType) {
+        this.imageContentType = imageContentType;
         return this;
     }
 
-    public void setMaxDebt(Double maxDebt) {
-        this.maxDebt = maxDebt;
-    }
-
-    public Double getDiscount() {
-        return discount;
-    }
-
-    public Customer discount(Double discount) {
-        this.discount = discount;
-        return this;
-    }
-
-    public void setDiscount(Double discount) {
-        this.discount = discount;
-    }
-
-    public Boolean isVisible() {
-        return visible;
-    }
-
-    public Customer visible(Boolean visible) {
-        this.visible = visible;
-        return this;
-    }
-
-    public void setVisible(Boolean visible) {
-        this.visible = visible;
-    }
-
-    public byte[] getPhoto() {
-        return photo;
-    }
-
-    public Customer photo(byte[] photo) {
-        this.photo = photo;
-        return this;
-    }
-
-    public void setPhoto(byte[] photo) {
-        this.photo = photo;
-    }
-
-    public String getPhotoContentType() {
-        return photoContentType;
-    }
-
-    public Customer photoContentType(String photoContentType) {
-        this.photoContentType = photoContentType;
-        return this;
-    }
-
-    public void setPhotoContentType(String photoContentType) {
-        this.photoContentType = photoContentType;
+    public void setImageContentType(String imageContentType) {
+        this.imageContentType = imageContentType;
     }
 
     public Contact getContact() {
@@ -258,56 +175,6 @@ public class Customer implements Serializable {
 
     public void setContact(Contact contact) {
         this.contact = contact;
-    }
-
-    public Set<Address> getAddresses() {
-        return addresses;
-    }
-
-    public Customer addresses(Set<Address> addresses) {
-        this.addresses = addresses;
-        return this;
-    }
-
-    public Customer addAddress(Address address) {
-        this.addresses.add(address);
-        address.setCustomer(this);
-        return this;
-    }
-
-    public Customer removeAddress(Address address) {
-        this.addresses.remove(address);
-        address.setCustomer(null);
-        return this;
-    }
-
-    public void setAddresses(Set<Address> addresses) {
-        this.addresses = addresses;
-    }
-
-    public Set<Note> getNotes() {
-        return notes;
-    }
-
-    public Customer notes(Set<Note> notes) {
-        this.notes = notes;
-        return this;
-    }
-
-    public Customer addNote(Note note) {
-        this.notes.add(note);
-        note.setCustomer(this);
-        return this;
-    }
-
-    public Customer removeNote(Note note) {
-        this.notes.remove(note);
-        note.setCustomer(null);
-        return this;
-    }
-
-    public void setNotes(Set<Note> notes) {
-        this.notes = notes;
     }
 
     public Set<FavouriteStore> getFavouritestores() {
@@ -385,18 +252,13 @@ public class Customer implements Serializable {
     public String toString() {
         return "Customer{" +
             "id=" + getId() +
-            ", customerUniqueId='" + getCustomerUniqueId() + "'" +
-            ", reference='" + getReference() + "'" +
+            ", idpCode='" + getIdpCode() + "'" +
             ", name='" + getName() + "'" +
-            ", searchKey='" + getSearchKey() + "'" +
-            ", card='" + getCard() + "'" +
-            ", curDebt=" + getCurDebt() +
-            ", debtDate='" + getDebtDate() + "'" +
-            ", maxDebt=" + getMaxDebt() +
-            ", discount=" + getDiscount() +
-            ", visible='" + isVisible() + "'" +
-            ", photo='" + getPhoto() + "'" +
-            ", photoContentType='" + getPhotoContentType() + "'" +
+            ", idpSub='" + getIdpSub() + "'" +
+            ", customerUniqueId='" + getCustomerUniqueId() + "'" +
+            ", imageLink='" + getImageLink() + "'" +
+            ", image='" + getImage() + "'" +
+            ", imageContentType='" + getImageContentType() + "'" +
             "}";
     }
 }

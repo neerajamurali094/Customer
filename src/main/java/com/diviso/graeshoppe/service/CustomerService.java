@@ -59,12 +59,6 @@ public interface CustomerService {
      */
     Page<CustomerDTO> search(String query, Pageable pageable);
     
-    /**
-     * send sms to the customer
-     *
-     * @param mobileNumber the mobileNumber of the customer
-     */
-    String sendSms(String mobileNumber);
     
     /**
      * send email to the customer
@@ -85,7 +79,7 @@ public interface CustomerService {
 
 	OTPChallenge verifyOTP(Long numbers, String code);
 
-	Customer findByReference(String reference);
+	Customer findByIdpCode(String reference);
 
 	Optional<CustomerDTO> findByMobileNumber(Long mobileNumber);
 

@@ -5,6 +5,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
@@ -25,10 +26,12 @@ public class Contact implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "mobile_number")
+    @NotNull
+    @Column(name = "mobile_number", nullable = false)
     private Long mobileNumber;
 
-    @Column(name = "phone_code")
+    @NotNull
+    @Column(name = "phone_code", nullable = false)
     private Long phoneCode;
 
     @Column(name = "telephone")

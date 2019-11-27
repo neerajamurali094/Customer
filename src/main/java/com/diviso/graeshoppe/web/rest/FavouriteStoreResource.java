@@ -10,14 +10,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
+
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing FavouriteStore.
@@ -44,16 +49,12 @@ public class FavouriteStoreResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/favourite-stores")
-    public ResponseEntity<FavouriteStoreDTO> createFavouriteStore(@RequestBody FavouriteStoreDTO favouriteStoreDTO) throws URISyntaxException {
+    public ResponseEntity<FavouriteStoreDTO> createFavouriteStore(@Valid @RequestBody FavouriteStoreDTO favouriteStoreDTO) throws URISyntaxException {
         log.debug("REST request to save FavouriteStore : {}", favouriteStoreDTO);
         if (favouriteStoreDTO.getId() != null) {
             throw new BadRequestAlertException("A new favouriteStore cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        FavouriteStoreDTO result1 = favouriteStoreService.save(favouriteStoreDTO);
-        if (result1.getId() == null) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idnull");
-        }
-        FavouriteStoreDTO result = favouriteStoreService.save(result1);
+        FavouriteStoreDTO result = favouriteStoreService.save(favouriteStoreDTO);
         return ResponseEntity.created(new URI("/api/favourite-stores/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -69,7 +70,7 @@ public class FavouriteStoreResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/favourite-stores")
-    public ResponseEntity<FavouriteStoreDTO> updateFavouriteStore(@RequestBody FavouriteStoreDTO favouriteStoreDTO) throws URISyntaxException {
+    public ResponseEntity<FavouriteStoreDTO> updateFavouriteStore(@Valid @RequestBody FavouriteStoreDTO favouriteStoreDTO) throws URISyntaxException {
         log.debug("REST request to update FavouriteStore : {}", favouriteStoreDTO);
         if (favouriteStoreDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
