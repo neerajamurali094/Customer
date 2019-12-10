@@ -52,6 +52,15 @@ public class FavouriteStoreServiceImpl implements FavouriteStoreService {
         favouriteStore = favouriteStoreRepository.save(favouriteStore);
         FavouriteStoreDTO result = favouriteStoreMapper.toDto(favouriteStore);
         favouriteStoreSearchRepository.save(favouriteStore);
+        return updateToEs(result);
+    }
+    
+    private FavouriteStoreDTO updateToEs(FavouriteStoreDTO favouriteStoreDTO) {
+        log.debug("Request to save FavouriteStore : {}", favouriteStoreDTO);
+        FavouriteStore favouriteStore = favouriteStoreMapper.toEntity(favouriteStoreDTO);
+        favouriteStore = favouriteStoreRepository.save(favouriteStore);
+        FavouriteStoreDTO result = favouriteStoreMapper.toDto(favouriteStore);
+        favouriteStoreSearchRepository.save(favouriteStore);
         return result;
     }
 

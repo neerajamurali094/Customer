@@ -52,6 +52,15 @@ public class FavouriteProductServiceImpl implements FavouriteProductService {
         favouriteProduct = favouriteProductRepository.save(favouriteProduct);
         FavouriteProductDTO result = favouriteProductMapper.toDto(favouriteProduct);
         favouriteProductSearchRepository.save(favouriteProduct);
+        return updateToEs(result);
+    }
+    
+    private FavouriteProductDTO updateToEs(FavouriteProductDTO favouriteProductDTO) {
+        log.debug("Request to save FavouriteProduct : {}", favouriteProductDTO);
+        FavouriteProduct favouriteProduct = favouriteProductMapper.toEntity(favouriteProductDTO);
+        favouriteProduct = favouriteProductRepository.save(favouriteProduct);
+        FavouriteProductDTO result = favouriteProductMapper.toDto(favouriteProduct);
+        favouriteProductSearchRepository.save(favouriteProduct);
         return result;
     }
 
